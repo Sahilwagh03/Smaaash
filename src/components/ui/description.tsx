@@ -11,6 +11,7 @@ const Description = ({
   children,
   size = "lg",
   className,
+  ...props
 }: DescriptionProps) => {
   return (
     <div
@@ -22,6 +23,7 @@ const Description = ({
         size === "xs" && "text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl 3xl:text-4xl",
         className
       )}
+      {...props}
     >
       {children}
     </div>

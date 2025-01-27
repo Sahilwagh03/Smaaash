@@ -13,6 +13,7 @@ export default function Heading({
   className,
   children,
   size = "xl",
+  ...props
 }: HeadingProps) {
   return (
     <Comp
@@ -25,6 +26,7 @@ export default function Heading({
         size === "xs" && "text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl 3xl:text-6xl",
         className
       )}
+      {...props}
     >
       {children}
     </Comp>

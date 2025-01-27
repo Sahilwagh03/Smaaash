@@ -1,10 +1,10 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import { heroSectionData } from '@/constant/home'
-import gsap from 'gsap'
-import { useGSAP } from '@gsap/react'
-import { Button } from './ui/button'
-import { cn } from '@/lib/utils'
+import React, { useEffect, useContext, useState } from 'react';
+import { heroSectionData } from '@/constant/home';
+import gsap from 'gsap';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
+import { TimelineContext } from '@/hooks/TimeLineProvider'; // Import the TimelineContext
 
 type Props = {
     enableVideo?: boolean; // Add a prop to conditionally render the video
@@ -14,12 +14,13 @@ const videoList = [
     "/Videos/bowling-2.mp4",
     "/Videos/gokarting.mp4",
     "/Videos/cricket.mp4",
-    "/Vidoes/VR.mp4"
+    "/Videos/VR.mp4" // Fixed typo in "Vidoes"
 ];
 
 const Hero = ({ enableVideo = false }: Props) => {
     const { title, description } = heroSectionData;
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+    const context = useContext(TimelineContext); // Use context to access global timeline
 
     useEffect(() => {
         if (enableVideo) {
@@ -31,35 +32,38 @@ const Hero = ({ enableVideo = false }: Props) => {
         setCurrentVideoIndex(prevIndex => (prevIndex + 1) % videoList.length);
     };
 
-    useGSAP(() => {
-        const tl = gsap.timeline({
-            defaults: { duration: 1, ease: 'power2.out' },
-        });
+    useEffect(() => {
+        if (context) {
+            const { globalTimeline } = context;
 
-        tl.from('#hero_title span', {
-            y: 100,
-            opacity: 0,
-            stagger: 0.05,
-        })
-            .from('#hero_description', {
-                opacity: 0,
-                y: 50,
-            }, "-=0.5")
-            .to('#hero_button', {
-                opacity: 1,
-                scale: 1.2,
-                duration: 0.5,
-            }, "-=0.3")
-            .from('.social-icons', {
-                opacity: 0,
-                x: 50,
-                duration: 1,
-                stagger: 0.3,
-            }, "-=0.2");
-    }, []);
+            // Add animations to the existing global timeline using `.to` instead of `.from`
+            globalTimeline.addLabel('hero-start')
+                .to('#hero_title span', {
+                    y: 0,
+                    opacity: 1,
+                    stagger: 0.05,
+                })
+                .to('#hero_description', {
+                    opacity: 1,
+                    y: 0,
+                }, "-=0.5")
+                .to('#hero_button', {
+                    opacity: 1,
+                    scale: 1.2,
+                    duration: 0.5,
+                }, "-=0.3")
+                .to('.social-icons', {
+                    opacity: 1,
+                    x: 0,
+                    duration: 1,
+                    stagger: 0.3,
+                }, "-=0.2");
+            globalTimeline.play()
+        }
+    }, [context]); // Ensure context is available before using it
 
     const splitTitle = title.split(' ').map((word, index) => (
-        <span key={index} className="inline-block">{word}&nbsp;</span>
+        <span key={index} className="translate-y-48 inline-block">{word}&nbsp;</span>
     ));
 
     return (
@@ -80,15 +84,15 @@ const Hero = ({ enableVideo = false }: Props) => {
             <div className='overflow-hidden relative z-10'>
                 <h1
                     id="hero_title"
-                    className={cn('pb-3 text-4xl font-semibold font-main' , enableVideo ? 'text-white' : 'text-[var(--brand-secondary)]', 
-                    'sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl 2xl:text-8xl')}
+                    className={cn('pb-3 text-4xl font-semibold font-main', enableVideo ? 'text-white' : 'text-[var(--brand-secondary)]',
+                        'sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl 2xl:text-8xl')}
                 >
                     {splitTitle}
                 </h1>
             </div>
             <p
                 id="hero_description"
-                className={`max-w-2xl text-sm font-sub ${enableVideo ? 'text-white' : 'text-[var(--brand-secondary)]'} 
+                className={`opacity-0 max-w-2xl text-sm font-sub ${enableVideo ? 'text-white' : 'text-[var(--brand-secondary)]'} 
                 sm:text-xs md:text-sm lg:text-base xl:text-lg 2xl:text-xl`}
             >
                 {description}
@@ -97,7 +101,7 @@ const Hero = ({ enableVideo = false }: Props) => {
                 Book Now
             </Button>
         </div>
-    )
+    );
 }
 
-export default Hero
+export default Hero;
