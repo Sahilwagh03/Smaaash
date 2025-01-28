@@ -1,17 +1,18 @@
 'use client'
-import React, { useEffect } from 'react'
 import Heading from './ui/heading'
 import Description from './ui/description'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { gsap } from 'gsap'
+import Image from 'next/image'
+import { useGSAP } from '@gsap/react'
 
 gsap.registerPlugin(ScrollTrigger)
 
 type Props = {}
 
 function SmaaashHighlights({ }: Props) {
-  useEffect(() => {
-    // GSAP animation setup for scroll trigger
+  useGSAP(() => {
+    
     gsap.fromTo(
       '.highlight-heading',
       { opacity: 0, y: 50 },
@@ -23,17 +24,15 @@ function SmaaashHighlights({ }: Props) {
           start: 'top 100%',  // Start when the element reaches 80% of the viewport height
           end: 'bottom 50%', // End when the element is fully out of view
           scrub: true,
-          markers:true
         }
       }
     )
 
     gsap.fromTo(
       '.highlight-description',
-      { opacity: 0, y: 100 },
+      { opacity: 0,},
       {
         opacity: 1,
-        y: 0,
         scrollTrigger: {
           trigger: '.highlight-description',
           start: 'top 100%',  // Start when the element reaches 80% of the viewport height
@@ -42,11 +41,22 @@ function SmaaashHighlights({ }: Props) {
         }
       }
     )
+
+    gsap.to('#page2 h1' , {
+      transform:'translateX(-150%)',
+      scrollTrigger:{
+        trigger:'#page2',
+        start:'top 0%',
+        end:'top -100%',
+        pin:true,
+        scrub:2,
+      }
+    })
   }, [])
 
   return (
-    <section className='py-28 px-5 h-[100vh] w-full'>
-      <div className='flex flex-col'>
+    <section className='py-14 md:py-24 h-auto w-full'>
+      <div className='flex flex-col px-2 md:px-5'>
         <div className='overflow-hidden'>
           <Heading
             size='md'
@@ -62,7 +72,9 @@ function SmaaashHighlights({ }: Props) {
           From cutting-edge virtual reality marvels to classic arcade favorites, experience the ultimate gaming extravaganza, catering to every taste and age, ensuring an unforgettable vibe for everyone who steps in.
         </Description>
       </div>
-      <div></div>
+      <div id='page2' className='w-full h-full bg-blue-400 overflow-x-hidden uppercase mt-10'>
+        <h1 className='text-[40vw]'>Experiences</h1>
+      </div>
     </section>
   )
 }

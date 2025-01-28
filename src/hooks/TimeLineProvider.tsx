@@ -1,7 +1,9 @@
 'use client'
 import React, { createContext, useState, ReactNode } from 'react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import gsap from 'gsap';
 
+gsap.registerPlugin(ScrollTrigger)
 // Define the shape of the context value
 interface TimelineContextType {
     globalTimeline: gsap.core.Timeline;

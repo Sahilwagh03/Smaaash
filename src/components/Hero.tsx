@@ -58,6 +58,20 @@ const Hero = ({ enableVideo = false }: Props) => {
                     duration: 1,
                     stagger: 0.3,
                 }, "-=0.2");
+
+            gsap.to(['video', '.overlay'],{
+                scale:0.95,
+                duration:1,
+                borderBottomLeftRadius:'5rem',
+                borderBottomRightRadius:'5rem',
+                scrollTrigger:{
+                    trigger:'#hero_container',
+                    start:'top -20%',
+                    end:'bottom 60%',
+                    markers:true,
+                    scrub:2
+                }
+            })
             globalTimeline.play()
         }
     }, [context]); // Ensure context is available before using it
@@ -67,7 +81,7 @@ const Hero = ({ enableVideo = false }: Props) => {
     ));
 
     return (
-        <div className='relative -mt-24 px-2 md:px-4 pt-24 lg:pt-28 flex justify-center items-center gap-4 flex-col min-h-[106vh] min-w-full text-center'>
+        <div id='hero_container' className='relative -mt-24 px-2 md:px-4 pt-24 lg:pt-28 flex justify-center items-center gap-4 flex-col min-h-[106vh] min-w-full text-center'>
             {enableVideo && (
                 <>
                     <video
@@ -78,7 +92,7 @@ const Hero = ({ enableVideo = false }: Props) => {
                         onEnded={handleVideoEnd}
                         className="absolute top-0 left-0 w-full h-full object-cover -z-30"
                     />
-                    <div className="absolute top-0 left-0 w-full h-full bg-black opacity-60 -z-30"></div>
+                    <div className="overlay absolute top-0 left-0 w-full h-full bg-black opacity-60 -z-30"></div>
                 </>
             )}
             <div className='overflow-hidden relative z-10'>
