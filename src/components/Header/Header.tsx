@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <>
-      <div id='header' className="sticky top-0 lg:top-3 z-50 lg:mx-4 flex items-center bg-[#ffffffb3] justify-between p-4 shadow-md lg:rounded-xl bg-white">
+      <div id='header' className="sticky top-0 lg:top-3 z-50 lg:mx-4 flex items-center bg-[#ffffffb3] justify-between p-2 shadow-md lg:rounded-xl bg-white">
         <Link href="/" className="flex items-center" aria-label="home">
           <Image
             loading="lazy"

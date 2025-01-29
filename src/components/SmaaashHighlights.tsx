@@ -30,7 +30,7 @@ const SmaaashHighlights = () => {
 
       tl.fromTo(
         highlightWrapperRef.current,
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 100 },
         { opacity: 1, y: 0 }
       )
 
@@ -89,11 +89,11 @@ const SmaaashHighlights = () => {
   }, [])
 
   return (
-    <section ref={sectionRef} className='py-14 md:py-24 h-auto w-full relative'>
+    <section ref={sectionRef} className='bg-[#f5f4fe] py-12 md:py-16 h-auto w-full relative'>
       <div ref={highlightRef} className='relative'>
         <div 
           ref={highlightWrapperRef}
-          className='flex flex-col px-2 md:px-5 highlight-wrapper'
+          className='flex flex-col px-2 md:px-5 lg:pl-10 highlight-wrapper'
         >
           <div className='overflow-hidden'>
             <Heading
@@ -115,7 +115,7 @@ const SmaaashHighlights = () => {
           >
             <div className='flex flex-row justify-start items-center h-full w-max'>
               {smaaashHighlight.map(({ imgUrl, highlightDescription, highlightName }) => (
-                <div key={highlightName} className='w-auto h-auto mr-4 flex-shrink-0'>
+                <div key={highlightName} className='w-auto h-auto mr-4 lg:mr-6 flex-shrink-0'>
                   <div className='flex flex-col h-full w-full'>
                     <div className='hightlight-img-wrapper flex justify-center rounded-xl w-full h-auto'>
                       <Image
@@ -127,7 +127,7 @@ const SmaaashHighlights = () => {
                       />
                     </div>
                     <div>
-                      <Heading size='xs' className='font-semibold tracking-tighter text-center highlight-name text-transparent bg-[linear-gradient(90deg,_#e0eeee_50%,_var(--brand-primary)_50%)] bg-clip-text bg-[length:200%_100%]'>
+                      <Heading size='xs' className='pt-1 lg:pt-2 font-semibold tracking-tighter text-center highlight-name text-transparent bg-[linear-gradient(90deg,_#e0eeee_50%,_var(--brand-primary)_50%)] bg-clip-text bg-[length:200%_100%]'>
                         {highlightName}
                       </Heading>
                     </div>

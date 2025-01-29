@@ -26,7 +26,7 @@ export default function MobileMenu() {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-[4rem] right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 z-40 ${
+        className={`fixed top-[3.5rem] right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 z-40 ${
           isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

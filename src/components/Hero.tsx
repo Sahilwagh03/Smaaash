@@ -62,8 +62,8 @@ const Hero = ({ enableVideo = false }: Props) => {
             gsap.to(['video', '.overlay'],{
                 scale:0.95,
                 duration:1,
-                borderBottomLeftRadius:'5rem',
-                borderBottomRightRadius:'5rem',
+                borderBottomLeftRadius:'3rem',
+                borderBottomRightRadius:'3rem',
                 scrollTrigger:{
                     trigger:'#hero_container',
                     start:'top -20%',
