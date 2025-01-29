@@ -14,7 +14,7 @@ const videoList = [
     "/Videos/bowling-2.mp4",
     "/Videos/gokarting.mp4",
     "/Videos/cricket.mp4",
-    "/Videos/VR.mp4" // Fixed typo in "Vidoes"
+    "/Videos/VR.mp4"
 ];
 
 const Hero = ({ enableVideo = false }: Props) => {
@@ -68,7 +68,6 @@ const Hero = ({ enableVideo = false }: Props) => {
                     trigger:'#hero_container',
                     start:'top -20%',
                     end:'bottom 60%',
-                    markers:true,
                     scrub:2
                 }
             })

@@ -10,6 +10,7 @@ const HomePage = (props: Props) => {
         <TimelineProvider>
             <Hero enableVideo />
             <SmaaashHighlights />
+            <div className="h-svh"></div>
             <SocialFloating />
         </TimelineProvider>
     )
