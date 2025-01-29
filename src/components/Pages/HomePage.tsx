@@ -1,7 +1,9 @@
+'use client';
 import Hero from "@/components/Hero";
 import SmaaashHighlights from "@/components/SmaaashHighlights";
 import SocialFloating from "@/components/socialFloating";
 import { TimelineProvider } from "@/hooks/TimeLineProvider";
+import ScratchCard from "../scratchCard";
 
 type Props = {}
 
@@ -10,7 +12,6 @@ const HomePage = (props: Props) => {
         <TimelineProvider>
             <Hero enableVideo />
             <SmaaashHighlights />
-            <div className="h-svh"></div>
             <SocialFloating />
         </TimelineProvider>
     )

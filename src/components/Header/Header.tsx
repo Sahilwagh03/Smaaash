@@ -1,15 +1,17 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { CustomNavigationMenu } from './_components/NavigationMenu'
 import MobileMenu from './_components/MobileMenu'
 import { Button } from '../ui/button'
 import SignUpForm from '../signUpForm' // Adjust path as needed
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
 export default function Header() {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false)
   const [formTitle, setFormTitle] = useState<string>('Sign Up') // Default to 'Sign Up'
+  const [isUserVerified, setIsUserVerified] = useState<boolean>(false)
 
   const handleSignUpClick = () => {
     setFormTitle('Sign Up')
@@ -20,6 +22,12 @@ export default function Header() {
     setFormTitle('Login')
     setIsSignUpOpen(true)
   }
+
+  useEffect(() => {
+    if (localStorage.getItem('user_verified') === 'true') {
+      setIsUserVerified(true)
+    }
+  }, [])
 
   return (
     <>
@@ -40,18 +48,31 @@ export default function Header() {
         </div>
 
         <div className="hidden md:flex items-center space-x-4">
-          <Button
-            onClick={handleLoginClick}
-            className="min-w-24 rounded-xl bg-brand_secondary text-white font-medium hover:bg-[#2f2e47] transition"
-          >
-            Login
-          </Button>
-          <Button
-            onClick={handleSignUpClick}
-            className="min-w-24 rounded-xl bg-brand_primary text-white font-medium hover:bg-[#c9293b] transition"
-          >
-            Sign Up
-          </Button>
+          {isUserVerified
+            ?
+            <>
+              <Avatar className='cursor-pointer'>
+                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <Button onClick={()=>{localStorage.removeItem('user_verified')}} className='min-w-24 rounded-xl bg-brand_primary text-white font-medium transition'>Logout</Button>
+            </>
+            :
+            <>
+              <Button
+                onClick={handleLoginClick}
+                className="min-w-24 rounded-xl bg-brand_secondary text-white font-medium hover:bg-[#2f2e47] transition"
+              >
+                Login
+              </Button>
+              <Button
+                onClick={handleSignUpClick}
+                className="min-w-24 rounded-xl bg-brand_primary text-white font-medium hover:bg-[#c9293b] transition"
+              >
+                Sign Up
+              </Button>
+            </>
+          }
           <div className='block lg:hidden'>
             <MobileMenu />
           </div>
@@ -63,9 +84,9 @@ export default function Header() {
       </div>
 
       {/* Sign Up Modal */}
-      <SignUpForm 
+      <SignUpForm
         formTitle={formTitle}
-        isOpen={isSignUpOpen} 
+        isOpen={isSignUpOpen}
         onOpenChange={setIsSignUpOpen}
       />
     </>

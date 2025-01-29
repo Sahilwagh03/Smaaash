@@ -1,12 +1,11 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,6 +15,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { InputOTPForm } from './otpform'
+import ScratchCard from './scratchCard' // Import the scratch card component
+import Image from 'next/image'
+import useSignUp from '@/hooks/useSignUp' // Import the custom hook
 
 // Form validation schema
 const formSchema = z.object({
@@ -33,8 +35,16 @@ type Props = {
 }
 
 const SignUpForm = ({ isOpen = false, onOpenChange, formTitle }: Props) => {
-    const [otpSent, setOtpSent] = useState(false) // State to track if OTP is sent
-    const [isLoading, setIsLoading] = useState(false) // State to track loading status
+    const { 
+        otpSent, 
+        isLoading, 
+        isVerified, 
+        isScratchCardFinish, 
+        sendOtp, 
+        verifyOtp, 
+        completeScratchCard, 
+        handleOpenChange 
+    } = useSignUp() // Using the custom hook
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -44,96 +54,113 @@ const SignUpForm = ({ isOpen = false, onOpenChange, formTitle }: Props) => {
     })
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values)
-        // Handle form submission and trigger OTP send action
-        setIsLoading(true) // Set loading to true when OTP is being sent
-        setTimeout(() => {
-            setOtpSent(true) // Simulate OTP sent after 2 seconds
-            setIsLoading(false) // Reset loading state
-        }, 2000) // Simulate an API call delay of 2 seconds
+        sendOtp(values.phoneNumber)
     }
 
-    // Handler to restrict input to numbers only
-    const handlePhoneInput = (e: React.FormEvent<HTMLInputElement>) => {
-        e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, '')
+    // Simulate OTP verification success
+    const handleOtpVerification = () => {
+        verifyOtp() // Call verifyOtp from the hook
     }
 
-    // Effect to reset form when dialog closes
     useEffect(() => {
         if (!isOpen) {
             form.reset()
-            setOtpSent(false) // Reset OTP sent state when dialog closes
         }
     }, [isOpen, form])
 
     return (
-        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
             <DialogContent className="sm:max-w-md font-main">
                 <div className="flex flex-col space-y-6 py-4">
-                    {!otpSent ? (
-                        <>
-                            <DialogHeader>
-                                <DialogTitle className="text-left text-2xl">
-                                    {formTitle}
-                                </DialogTitle>
-                                <DialogDescription className="text-left">
-                                    Enter your phone number to Book your ticket
-                                </DialogDescription>
-                            </DialogHeader>
-                            <Form {...form}>
-                                <form
-                                    onSubmit={form.handleSubmit(onSubmit)}
-                                    className="w-full space-y-4"
-                                >
-                                    <FormField
-                                        control={form.control}
-                                        name="phoneNumber"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <Label htmlFor="phone">Phone Number</Label>
-                                                <FormControl>
-                                                    <Input
-                                                        id="phone"
-                                                        type="tel"
-                                                        placeholder="Enter your Number"
-                                                        {...field}
-                                                        onInput={handlePhoneInput}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                    <Button
-                                        type="submit"
-                                        className="bg-[var(--brand-primary)] font-main text-white w-full"
-                                        disabled={isLoading} // Disable button during loading
+                    {!isVerified ? (
+                        !otpSent ? (
+                            <>
+                                <DialogHeader>
+                                    <DialogTitle className="text-left text-2xl">
+                                        {formTitle}
+                                    </DialogTitle>
+                                    <DialogDescription className="text-left">
+                                        Enter your phone number to book your ticket
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <Form {...form}>
+                                    <form
+                                        onSubmit={form.handleSubmit(onSubmit)}
+                                        className="w-full space-y-4"
                                     >
-                                        {isLoading ? (
-                                            <span className="flex items-center">
+                                        <FormField
+                                            control={form.control}
+                                            name="phoneNumber"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <Label htmlFor="phone">Phone Number</Label>
+                                                    <FormControl>
+                                                        <Input
+                                                            id="phone"
+                                                            type="tel"
+                                                            placeholder="Enter your Number"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
-                                                Sending...
-                                            </span>
-                                        ) : (
-                                            'Send Otp'
-                                        )}
-                                    </Button>
-                                </form>
-                            </Form>
-                        </>
+                                        <Button
+                                            type="submit"
+                                            className="bg-[var(--brand-primary)] font-main text-white w-full"
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading ? 'Sending...' : 'Send OTP'}
+                                        </Button>
+                                    </form>
+                                </Form>
+                            </>
+                        ) : (
+                            <>
+                                <DialogHeader>
+                                    <DialogTitle className="text-center text-2xl">
+                                        Verify the OTP
+                                    </DialogTitle>
+                                    <DialogDescription className="text-center">
+                                        Please enter the one-time password sent to your phone.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <InputOTPForm onVerify={handleOtpVerification} />
+                            </>
+                        )
                     ) : (
-                        <>
-                            <DialogHeader>
-                                <DialogTitle className="text-center text-2xl">
-                                    Verify the OTP
-                                </DialogTitle>
-                                <DialogDescription className="text-center">
-                                    Please enter the one-time password sent to your phone.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <InputOTPForm />
-                        </>
+                        // Scratch card display after verification
+                        <div className="flex min-h-[200px] flex-col items-center justify-center space-y-4">
+                            <ScratchCard
+                                coverImage="/images/scratch-card-overlay-gift.jpg"
+                                brushSize={50}
+                                className='w-full h-full'
+                                onComplete={() => { completeScratchCard() }}
+                            >
+                                <div className="select-none w-full h-full flex flex-col items-center justify-center space-y-4">
+                                    <Image
+                                        src="/images/reward-coin.png"
+                                        alt="coin"
+                                        width={200}
+                                        height={200}
+                                        className='w-60 h-60'
+                                    />
+                                    <p className="text-gray-600 text-center">
+                                        You have earned <strong className='text-[var(--brand-primary)]'>5 Smaaash Coins</strong>.<br />
+                                        Scratch below to reveal your reward!
+                                    </p>
+                                </div>
+                            </ScratchCard>
+                            {
+                                isScratchCardFinish && (
+                                    <Button onClick={() => onOpenChange?.(false)} className='bg-[var(--brand-primary)] rounded-lg text-white'>
+                                        Continue
+                                    </Button>
+                                )
+                            }
+                        </div>
                     )}
                 </div>
             </DialogContent>

@@ -9,10 +9,8 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from "@/components/ui/form"
 import {
@@ -28,7 +26,11 @@ const FormSchema = z.object({
     }),
 })
 
-export function InputOTPForm() {
+type OTPFormProps = {
+    onVerify: () => void; // Callback function to handle successful verification
+}
+
+export function InputOTPForm({ onVerify }: OTPFormProps) {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -42,7 +44,7 @@ export function InputOTPForm() {
         setIsLoading(true) // Set loading state when submitting
         // Simulate an OTP verification process (replace this with real API call)
         setTimeout(() => {
-            console.log("Verifying OTP:", data.pin)
+            onVerify() // Call the callback function after verification
             setIsLoading(false) // Reset loading state after verification
         }, 2000)
     }
@@ -58,12 +60,9 @@ export function InputOTPForm() {
                             <FormControl>
                                 <InputOTP maxLength={6} {...field}>
                                     <InputOTPGroup>
-                                        <InputOTPSlot index={0} />
-                                        <InputOTPSlot index={1} />
-                                        <InputOTPSlot index={2} />
-                                        <InputOTPSlot index={3} />
-                                        <InputOTPSlot index={4} />
-                                        <InputOTPSlot index={5} />
+                                        {[...Array(6)].map((_, index) => (
+                                            <InputOTPSlot key={index} index={index} />
+                                        ))}
                                     </InputOTPGroup>
                                 </InputOTP>
                             </FormControl>
@@ -71,20 +70,16 @@ export function InputOTPForm() {
                         </FormItem>
                     )}
                 />
-                <div className="flex flex-row justify-between items-center gap-2">
+                <div className="flex flex-row justify-between items-center gap-4">
                     <Button
                         type="submit"
                         className="w-1/2 bg-[var(--brand-primary)] text-white"
                         disabled={isLoading} // Disable button when loading
                     >
-                        {isLoading ? (
-                            <span>Verifying...</span> // You can replace this with a spinner
-                        ) : (
-                            "Verify"
-                        )}
+                        {isLoading ? "Verifying..." : "Verify"}
                     </Button>
-                    <Link href='#' className="w-1/2 text-center hover:text-[var(--brand-primary)]">
-                        <span className="w-full text-center">Resend Otp</span>
+                    <Link href="#" className="w-1/2 text-center text-[var(--brand-primary)] hover:underline">
+                        Resend OTP
                     </Link>
                 </div>
             </form>
