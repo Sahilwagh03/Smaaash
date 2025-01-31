@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header/Header";
 import { SmoothScrolling } from "@/components/SmoothScroll";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Smaaash - Home",
@@ -20,6 +21,7 @@ export default function RootLayout({
         <SmoothScrolling>
           {children}
         </SmoothScrolling>
+        <Footer/>
       </body>
     </html>
   );

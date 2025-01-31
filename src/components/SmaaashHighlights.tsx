@@ -108,7 +108,7 @@ const SmaaashHighlights = () => {
           </Description>
         </div>
         
-        <div className='w-full h-full overflow-x-hidden uppercase mt-5 md:mt-8 px-2 md:px-5'>
+        <div className='w-full h-auto overflow-x-hidden uppercase mt-5 md:mt-8 px-2 md:px-5'>
           <div 
             ref={contentRef}
             className='h-auto w-full'

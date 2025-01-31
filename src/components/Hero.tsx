@@ -20,7 +20,6 @@ const videoList = [
 const Hero = ({ enableVideo = false }: Props) => {
     const { title, description } = heroSectionData;
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-    const context = useContext(TimelineContext); // Use context to access global timeline
 
     useEffect(() => {
         if (enableVideo) {
@@ -33,47 +32,41 @@ const Hero = ({ enableVideo = false }: Props) => {
     };
 
     useEffect(() => {
-        if (context) {
-            const { globalTimeline } = context;
+        gsap.to('#hero_title span', {
+            y: 0,
+            opacity: 1,
+            stagger: 0.05,
+        })
+        gsap.to('#hero_description', {
+            opacity: 1,
+            y: 0,
+        })
+        gsap.to('#hero_button', {
+            opacity: 1,
+            scale: 1.2,
+            duration: 0.5,
+        })
+        gsap.to('.social-icons', {
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            stagger: 0.3,
+        },);
 
-            // Add animations to the existing global timeline using `.to` instead of `.from`
-            globalTimeline.addLabel('hero-start')
-                .to('#hero_title span', {
-                    y: 0,
-                    opacity: 1,
-                    stagger: 0.05,
-                })
-                .to('#hero_description', {
-                    opacity: 1,
-                    y: 0,
-                }, "-=0.5")
-                .to('#hero_button', {
-                    opacity: 1,
-                    scale: 1.2,
-                    duration: 0.5,
-                }, "-=0.3")
-                .to('.social-icons', {
-                    opacity: 1,
-                    x: 0,
-                    duration: 1,
-                    stagger: 0.3,
-                }, "-=0.2");
+        gsap.to(['video', '.overlay'], {
+            scale: 0.95,
+            duration: 1,
+            borderBottomLeftRadius: '3rem',
+            borderBottomRightRadius: '3rem',
+            scrollTrigger: {
+                trigger: '#hero_container',
+                start: 'top -20%',
+                end: 'bottom 60%',
+                scrub: 2
+            }
+        })
 
-            gsap.to(['video', '.overlay'],{
-                scale:0.95,
-                duration:1,
-                borderBottomLeftRadius:'3rem',
-                borderBottomRightRadius:'3rem',
-                scrollTrigger:{
-                    trigger:'#hero_container',
-                    start:'top -20%',
-                    end:'bottom 60%',
-                    scrub:2
-                }
-            })
-            globalTimeline.play()
-        }
-    }, [context]); // Ensure context is available before using it
+    }, []); // Ensure context is available before using it
 
     const splitTitle = title.split(' ').map((word, index) => (
         <span key={index} className="translate-y-48 inline-block">{word}&nbsp;</span>

@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
-import clsx from "clsx";
+import { JSX } from "react";
 
 type HeadingProps = {
-  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  as?: keyof JSX.IntrinsicElements; // Allows any valid HTML or SVG element
   size?: "xl" | "lg" | "md" | "sm" | "xs";
   children: React.ReactNode;
   className?: string;
-};
+} & (React.HTMLAttributes<HTMLElement> | React.SVGAttributes<SVGElement>); // Allows passing any prop
 
 export default function Heading({
   as: Comp = "h1",
@@ -26,7 +26,7 @@ export default function Heading({
         size === "xs" && "text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl 3xl:text-6xl",
         className
       )}
-      {...props}
+      {...props} // Allows passing extra attributes like id, data-*, etc.
     >
       {children}
     </Comp>

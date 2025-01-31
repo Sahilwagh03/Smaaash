@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -17,7 +17,6 @@ import * as z from 'zod'
 import { InputOTPForm } from './otpform'
 import ScratchCard from './scratchCard' // Import the scratch card component
 import Image from 'next/image'
-import useSignUp from '@/hooks/useSignUp' // Import the custom hook
 
 // Form validation schema
 const formSchema = z.object({
@@ -35,16 +34,10 @@ type Props = {
 }
 
 const SignUpForm = ({ isOpen = false, onOpenChange, formTitle }: Props) => {
-    const { 
-        otpSent, 
-        isLoading, 
-        isVerified, 
-        isScratchCardFinish, 
-        sendOtp, 
-        verifyOtp, 
-        completeScratchCard, 
-        handleOpenChange 
-    } = useSignUp() // Using the custom hook
+    const [otpSent, setOtpSent] = useState(false) // State to track if OTP is sent
+    const [isLoading, setIsLoading] = useState(false) // State to track loading status
+    const [isVerified, setIsVerified] = useState(false) // State to track OTP verification
+    const [isScratchCardFinish, setIsScratchCardFinish] = useState<boolean>(false)
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -54,22 +47,31 @@ const SignUpForm = ({ isOpen = false, onOpenChange, formTitle }: Props) => {
     })
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        sendOtp(values.phoneNumber)
+        console.log(values)
+        setIsLoading(true)
+        setTimeout(() => {
+            setOtpSent(true)
+            setIsLoading(false)
+        }, 2000)
     }
 
     // Simulate OTP verification success
     const handleOtpVerification = () => {
-        verifyOtp() // Call verifyOtp from the hook
+        setTimeout(() => {
+            setIsVerified(true) // Mark verification as complete
+        }, 1000)
     }
 
     useEffect(() => {
         if (!isOpen) {
             form.reset()
+            setOtpSent(false)
+            setIsVerified(false)
         }
     }, [isOpen, form])
 
     return (
-        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-md font-main">
                 <div className="flex flex-col space-y-6 py-4">
                     {!isVerified ? (
@@ -137,7 +139,7 @@ const SignUpForm = ({ isOpen = false, onOpenChange, formTitle }: Props) => {
                                 coverImage="/images/scratch-card-overlay-gift.jpg"
                                 brushSize={50}
                                 className='w-full h-full'
-                                onComplete={() => { completeScratchCard() }}
+                                onComplete={()=> setIsScratchCardFinish(true)}
                             >
                                 <div className="select-none w-full h-full flex flex-col items-center justify-center space-y-4">
                                     <Image
