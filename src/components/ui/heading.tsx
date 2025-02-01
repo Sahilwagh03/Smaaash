@@ -1,22 +1,29 @@
 import { cn } from "@/lib/utils";
-import { JSX } from "react";
+import { ElementType, ComponentProps, JSX } from "react";
 
-type HeadingProps = {
-  as?: keyof JSX.IntrinsicElements; // Allows any valid HTML or SVG element
+type HeadingElement = Extract<keyof JSX.IntrinsicElements, 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'p'>;
+
+type HeadingBaseProps = {
   size?: "xl" | "lg" | "md" | "sm" | "xs";
   children: React.ReactNode;
   className?: string;
-} & (React.HTMLAttributes<HTMLElement> | React.SVGAttributes<SVGElement>); // Allows passing any prop
+};
 
-export default function Heading({
-  as: Comp = "h1",
+type HeadingProps<C extends ElementType = HeadingElement> = HeadingBaseProps & {
+  as?: C;
+} & Omit<ComponentProps<C>, keyof HeadingBaseProps | 'as'>;
+
+export default function Heading<C extends ElementType = 'h1'>({
+  as,
   className,
   children,
   size = "xl",
   ...props
-}: HeadingProps) {
+}: HeadingProps<C>) {
+  const Component = (as || 'h1') as ElementType;
+
   return (
-    <Comp
+    <Component
       className={cn(
         "font-main",
         size === "xl" && "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl 3xl:text-10xl",
@@ -26,9 +33,9 @@ export default function Heading({
         size === "xs" && "text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl 3xl:text-6xl",
         className
       )}
-      {...props} // Allows passing extra attributes like id, data-*, etc.
+      {...props}
     >
       {children}
-    </Comp>
+    </Component>
   );
 }
