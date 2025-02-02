@@ -36,7 +36,7 @@ const OurCenter = (props: Props) => {
     // Reordered cities for better design aesthetics
     const cities = [
         "Mumbai", "Gurugram", "Mangalore", "Noida", "Vijayawada",
-        // "Hyderabad", "Madurai", "Ludhiana", "Gwalior", "Barnala"
+        "Hyderabad", "Madurai", "Ludhiana", "Gwalior", "Barnala"
     ];
 
     // Unique hover colors for each city
@@ -109,7 +109,7 @@ const OurCenter = (props: Props) => {
                 <ul className='flex flex-col justify-center items-center list-none'>
                     {cities.map((city, index) => (
                         <li key={index} ref={el => { cityRefs.current[index] = el }} className='relative w-fit z-[1] my-3 opacity-0'>
-                            <div className='city text-clamp font-main font-black relative opacity-[2] scale-[1] overflow-hidden' 
+                            <div className='city text-5xl md:text-6xl lg:text-9xl font-main font-black relative opacity-[2] scale-[1] overflow-hidden' 
                                 onMouseEnter={(e) => handleUpAnimation(e, city)} 
                                 onMouseLeave={handledDownAnimation}>
                                 

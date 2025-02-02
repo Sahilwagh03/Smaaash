@@ -1,10 +1,9 @@
 'use client'
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { heroSectionData } from '@/constant/home';
 import gsap from 'gsap';
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
-import { TimelineContext } from '@/hooks/TimeLineProvider'; // Import the TimelineContext
 
 type Props = {
     enableVideo?: boolean; // Add a prop to conditionally render the video

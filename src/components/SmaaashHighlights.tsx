@@ -1,4 +1,5 @@
 'use client'
+
 import Heading from './ui/heading'
 import Description from './ui/description'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -6,22 +7,17 @@ import { gsap } from 'gsap'
 import Image from 'next/image'
 import { useGSAP } from '@gsap/react'
 import { smaaashHighlight } from '@/constant/home'
-import { useRef } from 'react'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const SmaaashHighlights = () => {
-  const highlightWrapperRef = useRef<HTMLDivElement>(null)
-  const highlightRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const sectionRef = useRef<HTMLDivElement>(null)
-
   useGSAP(() => {
-    const ctx = gsap.context(() => {
-      // Initial fade animation
+    const isDesktop = window.innerWidth >= 1024;
+    
+    if (isDesktop) {
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: highlightWrapperRef.current,
+          trigger: '.highlight-wrapper',
           start: 'top 100%',
           end: 'bottom 50%',
           scrub: 2,
@@ -29,72 +25,50 @@ const SmaaashHighlights = () => {
       })
 
       tl.fromTo(
-        highlightWrapperRef.current,
-        { opacity: 0, y: 100 },
+        '.highlight-wrapper',
+        { opacity: 0, y: 50 },
         { opacity: 1, y: 0 }
       )
 
-      // Text gradient animation
+      gsap.to('#highlight-content', {
+        x: '-100%',
+        scrollTrigger: {
+          trigger: '.highlight',
+          start: 'top -10%',
+          end: 'top -110%',
+          pin: true,
+          scrub: 2,
+        }
+      })
+
       gsap.to('.highlight-name', {
         backgroundPositionX: '-100%',
         duration: 1,
         scrollTrigger: {
-          trigger: contentRef.current,
+          trigger: '#highlight-content',
           start: 'top 80%',
           end: 'bottom 0%',
-          scrub: 2,
+          scrub: true,
         },
         stagger: 1
       })
-
-      const mm = gsap.matchMedia()
-
-      // Function to calculate scroll distance
-      const calculateScrollDistance = () => {
-        if (!contentRef.current) return 0
-        const totalWidth = contentRef.current.scrollWidth
-        const containerWidth = contentRef.current.offsetWidth
-        return -(totalWidth - containerWidth)
-      }
-
-      // Common ScrollTrigger configuration for all devices
-      const createScrollTrigger = () => ({
-        trigger: highlightRef.current,
-        start: 'top top',
-        end: () => `+=${Math.abs(calculateScrollDistance())}`,
-        pin: true,
-        anticipatePin: 1,
-        scrub: 1,
-        invalidateOnRefresh: true,
-      })
-
-      // Desktop, Tablet, and Mobile animations all use the same configuration
-      // to maintain consistency across devices
-      mm.add("all", () => {
-        ScrollTrigger.saveStyles([contentRef.current])
-
-        const tween = gsap.to(contentRef.current, {
-          x: calculateScrollDistance,
-          ease: "none",
-          scrollTrigger: createScrollTrigger()
-        })
-
-        return () => {
-          tween.kill()
+    } else {
+      gsap.from('.highlight-wrapper', {
+        opacity: 0,
+        y: 30,
+        duration: 1,
+        scrollTrigger: {
+          trigger: '.highlight-wrapper',
+          start: 'top 80%',
         }
       })
-    }, sectionRef)
-
-    return () => ctx.revert()
+    }
   }, [])
 
   return (
-    <section ref={sectionRef} className='bg-[#f5f4fe] py-12 md:py-16 h-auto w-full relative'>
-      <div ref={highlightRef} className='relative'>
-        <div 
-          ref={highlightWrapperRef}
-          className='flex flex-col px-2 md:px-5 lg:pl-10 highlight-wrapper'
-        >
+    <section className='py-14 md:py-24 h-auto w-full'>
+      <div className='highlight'>
+        <div className='flex flex-col text-center lg:text-left md:text-md px-2 md:px-5 highlight-wrapper'>
           <div className='overflow-hidden'>
             <Heading
               size='md'
@@ -103,19 +77,19 @@ const SmaaashHighlights = () => {
               Smaaash Highlights
             </Heading>
           </div>
-          <Description size='xs' className='max-w-4xl'>
-            From cutting-edge virtual reality marvels to classic arcade favorites, experience the ultimate gaming extravaganza, catering to every taste and age, ensuring an unforgettable vibe for everyone who steps in.
+          <Description size='xs' className='max-w-4xl hidden md:flex'>
+            From cutting-edge virtual reality marvels to classic arcade favorites,
+            experience the ultimate gaming extravaganza, catering to every taste
+            and age, ensuring an unforgettable vibe for everyone who steps in.
           </Description>
         </div>
-        
-        <div className='w-full h-auto overflow-x-hidden uppercase mt-5 md:mt-8 px-2 md:px-5'>
-          <div 
-            ref={contentRef}
-            className='h-auto w-full'
-          >
-            <div className='flex flex-row justify-start items-center h-full w-max'>
+
+        {/* Desktop View - Horizontal Scroll */}
+        <div className='w-full h-full hidden lg:block overflow-x-hidden uppercase mt-5 md:mt-8 px-2 md:px-5'>
+          <div id='highlight-content' className='h-auto w-full'>
+            <div className='flex flex-row justify-start items-center h-full w-full'>
               {smaaashHighlight.map(({ imgUrl, highlightDescription, highlightName }) => (
-                <div key={highlightName} className='w-auto h-auto mr-4 lg:mr-6 flex-shrink-0'>
+                <div key={highlightName} className='w-auto h-auto mr-4 flex-shrink-0'>
                   <div className='flex flex-col h-full w-full'>
                     <div className='hightlight-img-wrapper flex justify-center rounded-xl w-full h-auto'>
                       <Image
@@ -123,11 +97,14 @@ const SmaaashHighlights = () => {
                         alt={highlightName}
                         width={400}
                         height={400}
-                        className='hightlight-img rounded-xl h-auto w-60'
+                        className='hightlight-img rounded-xl h-auto w-72'
                       />
                     </div>
                     <div>
-                      <Heading size='xs' className='pt-1 lg:pt-2 font-semibold tracking-tighter text-center highlight-name text-transparent bg-[linear-gradient(90deg,_#e0eeee_50%,_var(--brand-primary)_50%)] bg-clip-text bg-[length:200%_100%]'>
+                      <Heading
+                        size='xs'
+                        className='font-semibold tracking-tighter text-center highlight-name text-transparent bg-[linear-gradient(90deg,_#e0eeee_50%,_var(--brand-primary)_50%)] bg-clip-text bg-[length:200%_100%]'
+                      >
                         {highlightName}
                       </Heading>
                     </div>
@@ -136,6 +113,29 @@ const SmaaashHighlights = () => {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Mobile/Tablet View - Grid Layout */}
+        <div className='grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:hidden mt-5 px-2 md:px-5'>
+          {smaaashHighlight.map(({ imgUrl, highlightName }) => (
+            <div key={highlightName} className='flex flex-col items-center'>
+              <div className='w-full aspect-square relative overflow-hidden rounded-xl'>
+                <Image
+                  src={imgUrl}
+                  alt={highlightName}
+                  fill
+                  sizes="(max-width: 768px) 45vw, (max-width: 1024px) 30vw, 25vw"
+                  className='object-cover rounded-xl transform hover:scale-105 transition-transform duration-300'
+                />
+              </div>
+              <Heading
+                size='xs'
+                className='font-semibold tracking-tighter text-center mt-2 md:mt-4 text-sm md:text-base'
+              >
+                {highlightName}
+              </Heading>
+            </div>
+          ))}
         </div>
       </div>
     </section>
