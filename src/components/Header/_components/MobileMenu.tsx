@@ -1,15 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { FiMenu, FiX, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useState } from 'react';
 import { navigationLinks, thrillZoneActivities, partiesAndEvents } from '../../../constant/navigationLink';
 
 export default function MobileMenu() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isThrillZoneOpen, setIsThrillZoneOpen] = useState(false);
+  const [isPartiesAndEventsOpen, setIsPartiesAndEventsOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
+  };
+
+  const toggleThrillZone = () => {
+    setIsThrillZoneOpen((prev) => !prev);
+  };
+
+  const togglePartiesAndEvents = () => {
+    setIsPartiesAndEventsOpen((prev) => !prev);
   };
 
   return (
@@ -44,37 +54,57 @@ export default function MobileMenu() {
               </li>
             ))}
           </ul>
+
+          {/* Thrill Zone Dropdown */}
           <div>
-            <h3 className="block text-lg font-medium text-gray-700 hover:text-brand_primary">Thrill Zone</h3>
-            <ul className="space-y-2">
-              {thrillZoneActivities.map((activity) => (
-                <li key={activity.href} className='p-2'>
-                  <Link
-                    href={activity.href}
-                    onClick={toggleMobileMenu}
-                    className="block text-gray-600 hover:text-brand_primary"
-                  >
-                    {activity.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <button
+              onClick={toggleThrillZone}
+              className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-brand_primary focus:outline-none"
+            >
+              <span>Thrill Zone</span>
+              {isThrillZoneOpen ? <FiChevronUp size={20} /> : <FiChevronDown size={20} />}
+            </button>
+            {isThrillZoneOpen && (
+              <ul className="space-y-2 mt-2">
+                {thrillZoneActivities.map((activity) => (
+                  <li key={activity.href} className="p-2">
+                    <Link
+                      href={activity.href}
+                      onClick={toggleMobileMenu}
+                      className="block text-gray-600 hover:text-brand_primary"
+                    >
+                      {activity.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
+
+          {/* Parties & Events Dropdown */}
           <div>
-            <h3 className="block text-lg font-medium text-gray-700 hover:text-brand_primary">Parties & Events</h3>
-            <ul className="space-y-2">
-              {partiesAndEvents.map((event) => (
-                <li key={event.href} className='p-2'>
-                  <Link
-                    href={event.href}
-                    onClick={toggleMobileMenu}
-                    className="block text-gray-600 hover:text-brand_primary"
-                  >
-                    {event.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <button
+              onClick={togglePartiesAndEvents}
+              className="flex items-center justify-between w-full text-lg font-medium text-gray-700 hover:text-brand_primary focus:outline-none"
+            >
+              <span>Parties & Events</span>
+              {isPartiesAndEventsOpen ? <FiChevronUp size={20} /> : <FiChevronDown size={20} />}
+            </button>
+            {isPartiesAndEventsOpen && (
+              <ul className="space-y-2 mt-2">
+                {partiesAndEvents.map((event) => (
+                  <li key={event.href} className="p-2">
+                    <Link
+                      href={event.href}
+                      onClick={toggleMobileMenu}
+                      className="block text-gray-600 hover:text-brand_primary"
+                    >
+                      {event.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </nav>
       </div>

@@ -31,7 +31,7 @@ const SmaaashHighlights = () => {
       )
 
       gsap.to('#highlight-content', {
-        x: '-100%',
+        x: '-160%',
         scrollTrigger: {
           trigger: '.highlight',
           start: 'top -10%',
@@ -41,17 +41,17 @@ const SmaaashHighlights = () => {
         }
       })
 
-      gsap.to('.highlight-name', {
-        backgroundPositionX: '-100%',
-        duration: 1,
-        scrollTrigger: {
-          trigger: '#highlight-content',
-          start: 'top 80%',
-          end: 'bottom 0%',
-          scrub: true,
-        },
-        stagger: 1
-      })
+      // gsap.to('.highlight-name', {
+      //   backgroundPositionX: '-100%',
+      //   duration: 1,
+      //   scrollTrigger: {
+      //     trigger: '#highlight-content',
+      //     start: 'top 80%',
+      //     end: 'bottom 0%',
+      //     scrub: true,
+      //   },
+      //   stagger: 1
+      // })
     } else {
       gsap.from('.highlight-wrapper', {
         opacity: 0,
@@ -95,15 +95,15 @@ const SmaaashHighlights = () => {
                       <Image
                         src={imgUrl}
                         alt={highlightName}
-                        width={400}
-                        height={400}
-                        className='hightlight-img rounded-xl h-auto w-72'
+                        width={1000}
+                        height={1000}
+                        className='hightlight-img rounded-xl h-[30vw] w-[30vw]'
                       />
                     </div>
                     <div>
                       <Heading
                         size='xs'
-                        className='font-semibold tracking-tighter text-center highlight-name text-transparent bg-[linear-gradient(90deg,_#e0eeee_50%,_var(--brand-primary)_50%)] bg-clip-text bg-[length:200%_100%]'
+                        className='font-semibold tracking-tighter !text-brand_primary text-center highlight-name text-transparent bg-[linear-gradient(90deg,_#e0eeee_50%,_var(--brand-primary)_50%)] bg-clip-text bg-[length:200%_100%]'
                       >
                         {highlightName}
                       </Heading>

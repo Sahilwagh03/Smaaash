@@ -1,15 +1,19 @@
+// OurCenter.tsx
 'use client'
-import React, { useRef, useEffect } from 'react'
-import gsap from 'gsap'
-import ScrollTrigger from 'gsap/ScrollTrigger'
+import React, { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+import { useCursor } from '@/context/CursorContext';
+import Heading from './ui/heading';
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
-type Props = {}
+type Props = {};
 
 const OurCenter = (props: Props) => {
-    const containerRef = useRef(null)
-    const cityRefs = useRef<(HTMLLIElement | null)[]>([])
+    const containerRef = useRef(null);
+    const cityRefs = useRef<(HTMLLIElement | null)[]>([]);
+    const { setHovering } = useCursor();
 
     useEffect(() => {
         gsap.fromTo(
@@ -30,16 +34,14 @@ const OurCenter = (props: Props) => {
                     toggleActions: "play none none reverse",
                 }
             }
-        )
-    }, [])
+        );
+    }, []);
 
-    // Reordered cities for better design aesthetics
     const cities = [
         "Mumbai", "Gurugram", "Mangalore", "Noida", "Vijayawada",
         "Hyderabad", "Madurai", "Ludhiana", "Gwalior", "Barnala"
     ];
 
-    // Unique hover colors for each city
     const cityColors: { [key: string]: string } = {
         Mumbai: "#ff5733",      // Warm orange-red
         Gurugram: "#3498db",    // Cool blue
@@ -53,13 +55,11 @@ const OurCenter = (props: Props) => {
         Barnala: "#d35400",     // Burnt orange
     };
 
-
     const handleUpAnimation = (e: React.MouseEvent<HTMLDivElement>, city: string) => {
         const cityElement = e.currentTarget;
         const actualLetters = cityElement.querySelectorAll('.actual');
         const hoveringLetters = cityElement.querySelectorAll('.hovering');
 
-        // gsap.killTweensOf([actualLetters, hoveringLetters])
         gsap.to(actualLetters, {
             y: -150,
             rotate: 10,
@@ -75,8 +75,10 @@ const OurCenter = (props: Props) => {
             stagger: 0.07,
             duration: 1.2,
             ease: "back.out(1.7)",
-            color: cityColors[city]  // Change color dynamically
+            color: cityColors[city]
         });
+
+        setHovering(true); // Set hovering state to true
     };
 
     const handledDownAnimation = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -84,7 +86,6 @@ const OurCenter = (props: Props) => {
         const actualLetters = cityElement.querySelectorAll('.actual');
         const hoveringLetters = cityElement.querySelectorAll('.hovering');
 
-        // gsap.killTweensOf([actualLetters, hoveringLetters])
         gsap.to(actualLetters, {
             y: 0,
             rotate: 0,
@@ -101,15 +102,18 @@ const OurCenter = (props: Props) => {
             duration: 1.2,
             ease: "back.out(1.7)"
         });
+
+        setHovering(false); // Set hovering state to false
     };
 
     return (
-        <section ref={containerRef} className='px-2 md:px-5 py-7 lg:py-14 relative flex justify-center items-center'>
-            <div className='our-center-wrapper h-full w-full container flex justify-center items-center'>
-                <ul className='flex flex-col justify-center items-center list-none'>
+        <section ref={containerRef} id='our-centers' className='bg-white dark:bg-black relative z-10 px-2 md:px-5 py-7 lg:py-14 flex justify-center items-center'>
+            <div className='our-center-wrapper h-full w-full container flex gap-5 lg:gap-0 flex-col lg:flex-row justify-center items-center'>
+                <Heading className='lg:hidden font-bold'>Our centers</Heading>
+                <ul className='grid grid-cols-2 lg:grid-cols-1 gap-x-8 md:gap-x-16 lg:gap-0 lg:justify-items-center items-center list-none'>
                     {cities.map((city, index) => (
                         <li key={index} ref={el => { cityRefs.current[index] = el }} className='relative w-fit z-[1] my-3 opacity-0'>
-                            <div className='city text-5xl md:text-6xl lg:text-9xl font-main font-black relative opacity-[2] scale-[1] overflow-hidden' 
+                            <div className='city text-2xl md:text-5xl lg:text-9xl font-main font-black relative opacity-[2] scale-[1] overflow-hidden' 
                                 onMouseEnter={(e) => handleUpAnimation(e, city)} 
                                 onMouseLeave={handledDownAnimation}>
                                 
@@ -141,7 +145,7 @@ const OurCenter = (props: Props) => {
                 </ul>
             </div>
         </section>
-    )
-}
+    );
+};
 
 export default OurCenter;

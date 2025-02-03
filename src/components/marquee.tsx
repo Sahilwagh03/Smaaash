@@ -8,7 +8,7 @@ const CustomMarquee = () => {
         <Marquee
             gradient={false}
             speed={100}
-            className="overflow-hidden"
+            className="overflow-hidden py-4"
         >
             <div className="flex items-center p-[0_0.15vw] gap-[2vw] flex-shrink-0">
                 <Heading className="text-brand_primary opacity-75 font-bold">OFFER</Heading>
