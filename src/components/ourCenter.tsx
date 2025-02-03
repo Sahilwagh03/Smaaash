@@ -104,7 +104,7 @@ const OurCenter = (props: Props) => {
     };
 
     return (
-        <section ref={containerRef} className='px-2 md:px-5 py-12 md:py-16 relative flex justify-center items-center'>
+        <section ref={containerRef} className='px-2 md:px-5 py-7 lg:py-14 relative flex justify-center items-center'>
             <div className='our-center-wrapper h-full w-full container flex justify-center items-center'>
                 <ul className='flex flex-col justify-center items-center list-none'>
                     {cities.map((city, index) => (

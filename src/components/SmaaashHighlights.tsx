@@ -66,7 +66,7 @@ const SmaaashHighlights = () => {
   }, [])
 
   return (
-    <section className='py-14 md:py-24 h-auto w-full'>
+    <section className='py-7 lg:py-14 h-auto w-full'>
       <div className='highlight'>
         <div className='flex flex-col text-center lg:text-left md:text-md px-2 md:px-5 highlight-wrapper'>
           <div className='overflow-hidden'>
