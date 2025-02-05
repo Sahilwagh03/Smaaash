@@ -16,7 +16,7 @@ const HomePage = (props: Props) => {
             <Hero enableVideo />
             <SmaaashHighlights />
             <OurCenter />
-            <CustomMarquee />
+            {/* <CustomMarquee /> */}
             <CallToAction/>
             <SocialFloating />
         </>

@@ -1,15 +1,15 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { navigationLinks ,thrillZoneActivities, partiesAndEvents } from '@/constant/navigationLink';
+import { navigationLinks, thrillZoneActivities, partiesAndEvents } from '@/constant/navigationLink';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   return (
     <footer className="bg-white dark:bg-gray-900">
-      <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
-        <div className="md:flex md:justify-between">
+      <div className="mx-auto w-full max-w-screen-xl pt-6 lg:pt-8">
+        <div className="md:flex md:justify-between px-4">
           <div className="mb-6 md:mb-0">
             <a href="/" className="flex items-center">
               <Image
@@ -66,9 +66,9 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-        <div className="sm:flex sm:items-center sm:justify-between">
-          <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+        <hr className="mt-6 border-gray-200 sm:mt-auto dark:border-gray-700 lg:mt-8" />
+        <div className="flex items-center justify-center py-3 sm:py-auto lg:py-4 px-4 bg-brand_primary">
+          <span className="text-sm text-white sm:text-center dark:text-white">
             © {currentYear} <a href="/" className="hover:underline">Smaaash</a>. All Rights Reserved.
           </span>
         </div>

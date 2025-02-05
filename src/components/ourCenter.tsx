@@ -108,13 +108,13 @@ const OurCenter = (props: Props) => {
     };
 
     return (
-        <section ref={containerRef} id='our-centers' className='bg-white dark:bg-black relative z-10 px-2 md:px-5 py-7 lg:py-14 flex justify-center items-center'>
+        <section ref={containerRef} id='our-centers' className='bg-white dark:bg-black relative z-10 px-2 md:px-5 py-4 flex justify-center items-center'>
             <div className='our-center-wrapper h-full w-full container flex gap-5 lg:gap-0 flex-col lg:flex-row justify-center items-center'>
                 <Heading className='lg:hidden font-bold'>Our centers</Heading>
                 <ul className='grid grid-cols-2 lg:grid-cols-1 gap-x-8 md:gap-x-16 lg:gap-0 lg:justify-items-center items-center list-none'>
                     {cities.map((city, index) => (
                         <li key={index} ref={el => { cityRefs.current[index] = el }} className='relative w-fit z-[1] my-3 opacity-0'>
-                            <div className='city text-2xl md:text-5xl lg:text-7xl font-main font-black relative opacity-[2] scale-[1] overflow-hidden' 
+                                                        <div className='city text-2xl md:text-5xl lg:text-7xl font-main font-black relative opacity-[2] scale-[1] overflow-hidden' 
                                 onMouseEnter={isMobile ? undefined : (e) => handleUpAnimation(e, city)} // Disable hover on mobile
                                 onMouseLeave={isMobile ? undefined : handledDownAnimation}> {/* Disable hover on mobile */}
                                   

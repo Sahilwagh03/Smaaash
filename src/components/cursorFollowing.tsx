@@ -41,8 +41,8 @@ const CursorFollower: React.FC<CursorFollowerProps> = ({
 
   useGSAP(() => {
     gsap.to(cursorRef.current, {
-      width: isHovering ? "45px" : "20px",
-      height: isHovering ? "45px" : "20px",
+      width: isHovering ? "30px" : "20px",
+      height: isHovering ? "30px" : "20px",
       ease: "power3.out", // Smooth easing
       duration: 0.4, // Reduced duration for a snappier feel
     });
@@ -61,7 +61,7 @@ const CursorFollower: React.FC<CursorFollowerProps> = ({
       }}
     >
       {isHovering && (
-        <ArrowRight className="text-white"/>
+        <ArrowRight className="w-5 h-5 text-white"/>
       )}
     </div>
   );
