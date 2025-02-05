@@ -52,7 +52,7 @@ const Hero = ({ enableVideo = false }: Props) => {
             stagger: 0.3,
         },);
 
-        gsap.to(['video', '.overlay'], {
+        gsap.to(['.hero-video', '.overlay'], {
             scale: 0.95,
             duration: 1,
             borderBottomLeftRadius: '3rem',
@@ -81,7 +81,7 @@ const Hero = ({ enableVideo = false }: Props) => {
                         loop={false}
                         muted
                         onEnded={handleVideoEnd}
-                        className="absolute top-0 left-0 w-full h-full object-cover -z-30"
+                        className="hero-video absolute top-0 left-0 w-full h-full object-cover -z-30"
                     />
                     <div className="overlay absolute top-0 left-0 w-full h-full bg-black opacity-60 -z-30"></div>
                 </>

@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger)
 const SmaaashHighlights = () => {
   useGSAP(() => {
     const isDesktop = window.innerWidth >= 1024;
-    
+
     if (isDesktop) {
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -40,7 +40,7 @@ const SmaaashHighlights = () => {
           scrub: 1,
         },
       })
-  
+
       // Animation for description (from the bottom)
       gsap.from('.highlight-description', {
         y: '100%',
@@ -54,7 +54,7 @@ const SmaaashHighlights = () => {
       })
 
       gsap.to('#highlight-content', {
-        x: '-160%',
+        x: '-130%',
         scrollTrigger: {
           trigger: '.highlight',
           start: 'top -10%',
@@ -100,16 +100,24 @@ const SmaaashHighlights = () => {
         <div className='w-full h-full hidden lg:block overflow-x-hidden uppercase mt-5 md:mt-8 px-2 md:px-5'>
           <div id='highlight-content' className='h-auto w-full'>
             <div className='flex flex-row justify-start items-center h-full w-full'>
-              {smaaashHighlight.map(({ imgUrl, highlightDescription, highlightName }) => (
-                <div key={highlightName} className='w-auto h-auto mr-4 flex-shrink-0'>
+              {smaaashHighlight.map(({ imgUrl, videoUrl, highlightName }) => (
+                <div key={highlightName} className='w-auto h-auto mr-4 flex-shrink-0 relative group'>
                   <div className='flex flex-col h-full w-full'>
-                    <div className='hightlight-img-wrapper flex justify-center rounded-xl w-full h-auto'>
+                    <div className='hightlight-img-wrapper flex justify-center rounded-xl w-full h-auto overflow-hidden'>
                       <Image
                         src={imgUrl}
                         alt={highlightName}
                         width={1000}
                         height={1000}
-                        className='hightlight-img rounded-xl h-[30vw] w-[30vw]'
+                        className='hightlight-img rounded-xl h-[30vw] w-[30vw] object-cover group-hover:hidden'
+                      />
+                      <video
+                        src={videoUrl}
+                        className='hightlight-video h-[30vw] w-[30vw] object-cover hidden group-hover:block'
+                        muted
+                        loop
+                        playsInline
+                        autoPlay
                       />
                     </div>
                     <div>
