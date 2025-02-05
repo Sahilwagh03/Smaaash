@@ -56,7 +56,6 @@ const CursorFollower: React.FC<CursorFollowerProps> = ({
         backgroundColor: 'var(--brand-primary)',
         width: `${size}px`,
         height: `${size}px`,
-        display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
       }}

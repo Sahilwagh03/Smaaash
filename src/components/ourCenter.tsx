@@ -1,10 +1,10 @@
-// OurCenter.tsx
 'use client'
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import { useCursor } from '@/context/CursorContext';
 import Heading from './ui/heading';
+import useDeviceSize from '@/hooks/useDevice';  // Import the hook
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +14,7 @@ const OurCenter = (props: Props) => {
     const containerRef = useRef(null);
     const cityRefs = useRef<(HTMLLIElement | null)[]>([]);
     const { setHovering } = useCursor();
+    const isMobile = useDeviceSize(); // Get screen size information
 
     useEffect(() => {
         gsap.fromTo(
@@ -65,7 +66,7 @@ const OurCenter = (props: Props) => {
             rotate: 10,
             stagger: 0.07,
             duration: 1.2,
-            ease: "back.out(1.7)"
+            ease: "back.out(2)"
         });
 
         gsap.to(hoveringLetters, {
@@ -91,7 +92,7 @@ const OurCenter = (props: Props) => {
             rotate: 0,
             stagger: 0.07,
             duration: 1.2,
-            ease: "back.out(1.7)"
+            ease: "back.out(2)"
         });
 
         gsap.to(hoveringLetters, {
@@ -100,7 +101,7 @@ const OurCenter = (props: Props) => {
             opacity: 0,
             stagger: 0.07,
             duration: 1.2,
-            ease: "back.out(1.7)"
+            ease: "back.out(2)"
         });
 
         setHovering(false); // Set hovering state to false
@@ -113,10 +114,10 @@ const OurCenter = (props: Props) => {
                 <ul className='grid grid-cols-2 lg:grid-cols-1 gap-x-8 md:gap-x-16 lg:gap-0 lg:justify-items-center items-center list-none'>
                     {cities.map((city, index) => (
                         <li key={index} ref={el => { cityRefs.current[index] = el }} className='relative w-fit z-[1] my-3 opacity-0'>
-                            <div className='city text-2xl md:text-5xl lg:text-9xl font-main font-black relative opacity-[2] scale-[1] overflow-hidden' 
-                                onMouseEnter={(e) => handleUpAnimation(e, city)} 
-                                onMouseLeave={handledDownAnimation}>
-                                
+                            <div className='city text-2xl md:text-5xl lg:text-7xl font-main font-black relative opacity-[2] scale-[1] overflow-hidden' 
+                                onMouseEnter={isMobile ? undefined : (e) => handleUpAnimation(e, city)} // Disable hover on mobile
+                                onMouseLeave={isMobile ? undefined : handledDownAnimation}> {/* Disable hover on mobile */}
+                                  
                                 <div className='leading-[1]' >
                                     {city.split(" ").map((word) => (
                                         <span className='inline-block' key={word}>

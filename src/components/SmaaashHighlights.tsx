@@ -24,11 +24,34 @@ const SmaaashHighlights = () => {
         }
       })
 
-      tl.fromTo(
-        '.highlight-wrapper',
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0 }
-      )
+      // tl.fromTo(
+      //   '.highlight-wrapper',
+      //   { opacity: 0, y: 50 },
+      //   { opacity: 1, y: 0 }
+      // )
+
+      gsap.from('.highlight-heading', {
+        x: '-100%',
+        duration: 1,
+        scrollTrigger: {
+          trigger: '.highlight-wrapper',
+          start: 'top 80%',
+          end: 'top 50%',
+          scrub: 1,
+        },
+      })
+  
+      // Animation for description (from the bottom)
+      gsap.from('.highlight-description', {
+        y: '100%',
+        duration: 1,
+        scrollTrigger: {
+          trigger: '.highlight-wrapper',
+          start: 'top 80%',
+          end: 'top 50%',
+          scrub: 1,
+        },
+      })
 
       gsap.to('#highlight-content', {
         x: '-160%',
@@ -41,17 +64,6 @@ const SmaaashHighlights = () => {
         }
       })
 
-      // gsap.to('.highlight-name', {
-      //   backgroundPositionX: '-100%',
-      //   duration: 1,
-      //   scrollTrigger: {
-      //     trigger: '#highlight-content',
-      //     start: 'top 80%',
-      //     end: 'bottom 0%',
-      //     scrub: true,
-      //   },
-      //   stagger: 1
-      // })
     } else {
       gsap.from('.highlight-wrapper', {
         opacity: 0,
@@ -72,12 +84,12 @@ const SmaaashHighlights = () => {
           <div className='overflow-hidden'>
             <Heading
               size='md'
-              className='pb-2 font-semibold tracking-tighter inline-block'
+              className='pb-2 font-semibold tracking-tighter inline-block highlight-heading'
             >
               Smaaash Highlights
             </Heading>
           </div>
-          <Description size='xs' className='max-w-4xl hidden md:flex'>
+          <Description size='xs' className='max-w-4xl hidden md:flex highlight-description'>
             From cutting-edge virtual reality marvels to classic arcade favorites,
             experience the ultimate gaming extravaganza, catering to every taste
             and age, ensuring an unforgettable vibe for everyone who steps in.

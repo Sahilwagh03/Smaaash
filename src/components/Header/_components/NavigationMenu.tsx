@@ -14,6 +14,7 @@ import {
     navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { navigationLinks, thrillZoneActivities, partiesAndEvents } from '../../../constant/navigationLink';
+import Image from "next/image";
 
 export function CustomNavigationMenu() {
     const pathname = usePathname();
@@ -41,9 +42,11 @@ export function CustomNavigationMenu() {
                 <li className="row-span-3">
                   <NavigationMenuLink asChild>
                     <Link
-                      className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                      className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted  no-underline outline-none focus:shadow-md"
                       href="/"
                     >
+                      <Image src='/images/birthdayparty-nav.jpg' alt="birthdayparty" 
+                      width={1000} height={1000} className="w-full h-full rounded-lg"/>
                     </Link>
                   </NavigationMenuLink>
                 </li>

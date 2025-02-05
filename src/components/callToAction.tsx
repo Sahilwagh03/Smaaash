@@ -5,10 +5,10 @@ import Image from 'next/image'
 
 type Props = {}
 
-function CalloutSection({ }: Props) {
+function CallToAction({ }: Props) {
 
   return (
-    <section className='callout-section relative py-7 lg:py-14 h-auto w-full'>
+    <section id='call-to-action' className='callout-section relative py-7 lg:py-14 h-auto w-full'>
       <div className="p-10 sm:p-10 m-5 rounded-3xl bg-white text-black flex items-center justify-center overflow-hidden">
         <div className="w-full max-w-6xl px-4 sm:px-6">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -39,4 +39,4 @@ function CalloutSection({ }: Props) {
   )
 }
 
-export default CalloutSection
+export default CallToAction

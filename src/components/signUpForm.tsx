@@ -17,6 +17,7 @@ import * as z from 'zod'
 import { InputOTPForm } from './otpform'
 import ScratchCard from './scratchCard' // Import the scratch card component
 import Image from 'next/image'
+import { useAuth } from '@/context/AuthContext'
 
 // Form validation schema
 const formSchema = z.object({
@@ -34,6 +35,7 @@ type Props = {
 }
 
 const SignUpForm = ({ isOpen = false, onOpenChange, formTitle }: Props) => {
+    const { setIsUserVerified } = useAuth() 
     const [otpSent, setOtpSent] = useState(false) // State to track if OTP is sent
     const [isLoading, setIsLoading] = useState(false) // State to track loading status
     const [isVerified, setIsVerified] = useState(false) // State to track OTP verification
@@ -55,10 +57,11 @@ const SignUpForm = ({ isOpen = false, onOpenChange, formTitle }: Props) => {
         }, 2000)
     }
 
-    // Simulate OTP verification success
     const handleOtpVerification = () => {
         setTimeout(() => {
-            setIsVerified(true) // Mark verification as complete
+            setIsVerified(true)
+            localStorage.setItem('user_verified', 'true')
+            setIsUserVerified(true) // Update global state
         }, 1000)
     }
 

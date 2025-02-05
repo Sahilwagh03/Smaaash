@@ -6,17 +6,17 @@ export const navigationLinks = [
     },
     {
         title: "About",
-        href: "/about",
+        href: "#about",
         isExternal: false,
     },
     {
         title: "Our Centers",
-        href: "/our-centers",
+        href: "#our-centers",
         isExternal: false,
     },
     {
         title: "Contact",
-        href: "/contact",
+        href: "#call-to-action",
         isExternal: false,
     },
 ];

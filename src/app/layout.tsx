@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header/Header";
 import { SmoothScrolling } from "@/components/SmoothScroll";
 import Footer from "@/components/footer";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Smaaash - Home",
@@ -17,11 +18,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header />
-        <SmoothScrolling>
-          {children}
-        </SmoothScrolling>
-        <Footer/>
+        <AuthProvider>
+          <Header />
+          <SmoothScrolling>
+            {children}
+          </SmoothScrolling>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
