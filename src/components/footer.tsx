@@ -41,7 +41,7 @@ const Footer = () => {
                 Thrill Zone
               </h2>
               <ul className="text-gray-500 dark:text-gray-400 font-medium">
-                {thrillZoneActivities.map((activity) => (
+                {thrillZoneActivities.slice(0,4).map((activity) => (
                   <li key={activity.href} className="mb-4">
                     <Link href={activity.href} className="hover:underline">
                       {activity.title}
