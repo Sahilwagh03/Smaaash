@@ -6,7 +6,7 @@ type Props = {}
 const SocialFloating = (props: Props) => {
     return (
         <div className='fixed top-[80%] md:top-[40%] right-0 bg-white rounded-tl-xl rounded-bl-xl h-auto px-7 py-4 z-10 gap-8 w-10 flex flex-col items-center justify-center'>
-            <Link href='#'>
+            <Link href='https://www.instagram.com/smaaash_live/' target='_blank'>
                 <FaInstagram className='w-8 h-8 text-black hover:text-[var(--brand-primary)]' />
             </Link>
             <Link href='#'>

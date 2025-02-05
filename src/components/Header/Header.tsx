@@ -7,10 +7,10 @@ import MobileMenu from './_components/MobileMenu'
 import { Button } from '../ui/button'
 import SignUpForm from '../signUpForm'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { useAuth } from '@/context/AuthContext' 
+import { useAuth } from '@/context/AuthContext'
 
 export default function Header() {
-  const { isUserVerified, setIsUserVerified, handleSignUpClick, handleLoginClick, handleLogout , formTitle ,isSignUpOpen , setIsSignUpOpen} = useAuth()
+  const { isUserVerified, setIsUserVerified, handleSignUpClick, handleLoginClick, handleLogout, formTitle, isSignUpOpen, setIsSignUpOpen } = useAuth()
 
   return (
     <>
@@ -34,8 +34,10 @@ export default function Header() {
           {isUserVerified ? (
             <>
               <Avatar className='cursor-pointer'>
-                <AvatarImage src="https://github.com/shadcn.png" alt="User" />
-                <AvatarFallback>CN</AvatarFallback>
+                <Link href='/profile'>
+                  <AvatarImage src="https://github.com/shadcn.png" alt="User" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Link>
               </Avatar>
               <Button onClick={handleLogout} className='min-w-24 rounded-xl bg-brand_primary text-white font-medium transition'>
                 Logout

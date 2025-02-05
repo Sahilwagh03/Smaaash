@@ -4,6 +4,7 @@ import Header from "@/components/Header/Header";
 import { SmoothScrolling } from "@/components/SmoothScroll";
 import Footer from "@/components/footer";
 import { AuthProvider } from "@/context/AuthContext";
+import MainLayout from "@/components/MainLayout";
 
 export const metadata: Metadata = {
   title: "Smaaash - Home",
@@ -17,14 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+      <script src="https://static.elfsight.com/platform/platform.js" async></script>
+      </head>
       <body>
-        <AuthProvider>
-          <Header />
-          <SmoothScrolling>
-            {children}
-          </SmoothScrolling>
-          <Footer />
-        </AuthProvider>
+        <MainLayout>{children}</MainLayout>
       </body>
     </html>
   );

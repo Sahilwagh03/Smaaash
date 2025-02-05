@@ -6,6 +6,7 @@ import OurCenter from "../ourCenter";
 import CursorFollower from "../cursorFollowing";
 import CallToAction from "../callToAction";
 import Gallery from "../gallery";
+import InstagramFeed from "../instagramFeed";
 
 type Props = {}
 
@@ -16,7 +17,7 @@ const HomePage = (props: Props) => {
             <Hero enableVideo />
             <SmaaashHighlights />
             <OurCenter />
-            {/* <CustomMarquee /> */}
+            <InstagramFeed/>
             <CallToAction/>
             <SocialFloating />
         </>
