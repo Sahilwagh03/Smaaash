@@ -17,28 +17,6 @@ const OurCenter = (props: Props) => {
     const { setHovering } = useCursor();
     const isMobile = useDeviceSize(); // Get screen size information
 
-    useEffect(() => {
-        gsap.fromTo(
-            cityRefs.current,
-            {
-                opacity: 0,
-                y: 50,
-            },
-            {
-                opacity: 1,
-                y: 0,
-                stagger: 0.15,
-                duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top 80%",
-                    toggleActions: "play none none reverse",
-                }
-            }
-        );
-    }, []);
-
     const cities = [
         {
             cityName: "Mumbai",
@@ -113,16 +91,16 @@ const OurCenter = (props: Props) => {
         gsap.to(actualLetters, {
             y: -150,
             rotate: 10,
-            stagger: 0.07,
+            stagger: 0.04,
             duration: 1.2,
-            ease: "back.out(2)"
+            ease: "back.out(0.5)"
         });
 
         gsap.to(hoveringLetters, {
             y: 0,
             rotate: 0,
             opacity: 1,
-            stagger: 0.07,
+            stagger: 0.04,
             duration: 1.2,
             ease: "back.out(1.7)",
             color: cityColors[cityName]
@@ -139,18 +117,18 @@ const OurCenter = (props: Props) => {
         gsap.to(actualLetters, {
             y: 0,
             rotate: 0,
-            stagger: 0.07,
+            stagger: 0.04,
             duration: 1.2,
-            ease: "back.out(2)"
+            ease: "back.out(0.5)"
         });
 
         gsap.to(hoveringLetters, {
             y: 150,
             rotate: 10,
             opacity: 0,
-            stagger: 0.07,
+            stagger: 0.04,
             duration: 1.2,
-            ease: "back.out(2)"
+            ease: "back.out(0.5)"
         });
 
         setHovering(false); // Set hovering state to false
@@ -160,14 +138,14 @@ const OurCenter = (props: Props) => {
         <section ref={containerRef} id='our-centers' className='bg-white dark:bg-black relative z-10 px-2 md:px-5 py-4 flex justify-center items-center'>
             <div className='our-center-wrapper h-full w-full container flex gap-5 lg:gap-0 flex-col lg:flex-row justify-center items-center'>
                 <Heading className='lg:hidden font-bold'>Our centers</Heading>
-                <ul className='grid grid-cols-2 lg:grid-cols-1 gap-x-8 md:gap-x-16 lg:gap-0 lg:justify-items-center items-center list-none'>
+                <ul className='grid grid-cols-2 lg:flex lg:flex-wrap  lg:justify-center gap-x-8 md:gap-x-16 lg:gap-2 lg:justify-items-center items-center list-none'>
                     {cities.map(({cityName,imageUrl , alt}, index) => (
-                        <li key={index} ref={el => { cityRefs.current[index] = el }} className='relative w-fit z-[1] my-3 opacity-0'>
-                            <div className='city text-xl md:text-5xl lg:text-7xl font-main font-black relative opacity-[2] scale-[1] overflow-hidden'
+                        <li key={index} ref={el => { cityRefs.current[index] = el }} className='relative w-fit z-[1] my-3'>
+                            <div className='city text-xl md:text-5xl lg:text-5xl font-main font-black relative opacity-[2] scale-[1] overflow-hidden'
                                 onMouseEnter={isMobile ? undefined : (e) => handleUpAnimation(e, cityName)}
                                 onMouseLeave={isMobile ? undefined : handledDownAnimation}> 
 
-                                <div className='leading-[1] md:leading-[1.4] flex items-baseline md:items-center' >
+                                <div className='leading-[1] md:leading-[1.4] flex items-baseline md:items-center lg:gap-2' >
                                     <Image src={imageUrl} alt={alt} width={1000} height={1000} className='w-10 h-10 lg:w-20 lg:h-20' />
                                     {cityName.split(" ").map((word) => (
                                         <span className='inline-block' key={word}>
@@ -178,7 +156,7 @@ const OurCenter = (props: Props) => {
                                     ))}
                                 </div>
 
-                                <div className='absolute top-0 left-0 h-full w-full leading-[1] md:leading-[1.4] flex items-center' style={{ color: cityColors[cityName] }}>
+                                <div className='absolute top-0 left-0 h-full w-full leading-[1] md:leading-[1.4] flex items-center lg:gap-2' style={{ color: cityColors[cityName] }}>
                                     <Image src={imageUrl} alt={alt} width={1000} height={1000} className='w-10 h-10 lg:w-20 lg:h-20' />
                                     {cityName.split(" ").map((word) => (
                                         <span className='inline-block' key={word}>

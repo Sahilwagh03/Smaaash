@@ -11,6 +11,7 @@ import { smaaashHighlight } from '@/constant/home'
 gsap.registerPlugin(ScrollTrigger)
 
 const SmaaashHighlights = () => {
+  
   useGSAP(() => {
     const isDesktop = window.innerWidth >= 1024;
 
@@ -24,12 +25,6 @@ const SmaaashHighlights = () => {
         }
       })
 
-      // tl.fromTo(
-      //   '.highlight-wrapper',
-      //   { opacity: 0, y: 50 },
-      //   { opacity: 1, y: 0 }
-      // )
-
       gsap.from('.highlight-heading', {
         x: '-100%',
         duration: 1,
@@ -41,7 +36,6 @@ const SmaaashHighlights = () => {
         },
       })
 
-      // Animation for description (from the bottom)
       gsap.from('.highlight-description', {
         y: '100%',
         duration: 1,

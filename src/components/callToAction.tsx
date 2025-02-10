@@ -24,8 +24,8 @@ function CallToAction({ }: Props) {
       scrollTrigger: {
         trigger: sectionRef.current,
         start: 'top 65%',
-        end: 'bottom 0%',
-        toggleActions: 'play none none reverse',
+        end: 'bottom 50%',
+        scrub:2,
       }
     });
 

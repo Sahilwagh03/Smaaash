@@ -134,3 +134,7 @@ body {
 .gallery {
   height: 100vh;
 }
+
+.smallTitle{
+  grid-area: 1/6/2/8;
+}

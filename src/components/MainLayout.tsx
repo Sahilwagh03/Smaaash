@@ -10,7 +10,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     const pathname = usePathname();
 
     
-    const hiddenPaths = ["/dashboard", "/profile", "/settings"];
+    const hiddenPaths = ["/dashboard", "/settings"];
 
     const shouldHideHeaderFooter = hiddenPaths.some((path) =>
         pathname.startsWith(path)

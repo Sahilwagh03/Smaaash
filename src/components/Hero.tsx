@@ -61,7 +61,7 @@ const Hero = ({ enableVideo = false }: Props) => {
                 trigger: '#hero_container',
                 start: 'top -20%',
                 end: 'bottom 60%',
-                scrub: 2
+                scrub: 1
             }
         })
 
