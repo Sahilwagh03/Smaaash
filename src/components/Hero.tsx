@@ -102,9 +102,16 @@ const Hero = ({ enableVideo = false }: Props) => {
             >
                 {description}
             </p>
-            <Button id='hero_button' className='opacity-0 mt-2 text-white text-lg font-main bg-[var(--brand-primary)]'>
-                Book Now
-            </Button>
+            <button className="relative border-none bg-transparent p-0 cursor-pointer outline-offset-4 transition-filter duration-250 user-select-none -webkit-user-select-none touch-action-manipulation focus:outline-none" role="button">
+                
+                <span className="absolute top-0 left-0 w-full h-full rounded-xl bg-black/25 will-change-transform translate-y-[2px] transition-transform duration-600 ease-[cubic-bezier(.3,.7,.4,1)]"></span>
+                
+                <span className="absolute top-0 left-0 w-full h-full rounded-xl bg-gradient-to-l from-[hsl(340deg,100%,16%)] via-[hsl(340deg,100%,32%)] to-[hsl(340deg,100%,16%)]"></span>
+                
+                <span className="block relative px-[27px] py-[12px] rounded-xl text-[1.1rem] text-white bg-[hsl(345deg,100%,47%)] will-change-transform -translate-y-[4px] transition-transform duration-600 ease-[cubic-bezier(.3,.7,.4,1)]">
+                    Book Now
+                </span>
+            </button>
         </div>
     );
 }

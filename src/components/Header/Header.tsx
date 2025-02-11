@@ -11,7 +11,11 @@ import { useAuth } from '@/context/AuthContext'
 
 export default function Header() {
   const { isUserVerified, setIsUserVerified, handleSignUpClick, handleLoginClick, handleLogout, formTitle, isSignUpOpen, setIsSignUpOpen } = useAuth()
-
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const onOpenChange = (data:boolean)=>{
+    setIsMobileMenuOpen(false)
+    setIsSignUpOpen(data)
+  }
   return (
     <>
       <div id='header' className="sticky top-0 z-50 flex items-center bg-[#ffffffb3] justify-between p-2 shadow-md bg-white">
@@ -34,7 +38,7 @@ export default function Header() {
           {isUserVerified ? (
             <>
               <Avatar className='cursor-pointer'>
-                <Link href='/profile'>
+                <Link href='/profile' >
                   <AvatarImage src="https://github.com/shadcn.png" alt="User" />
                   <AvatarFallback>CN</AvatarFallback>
                 </Link>
@@ -54,19 +58,19 @@ export default function Header() {
             </>
           )}
           <div className='block lg:hidden'>
-            <MobileMenu />
+            <MobileMenu isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}/>
           </div>
         </div>
 
         <div className='md:hidden'>
-          <MobileMenu />
+          <MobileMenu isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}/>
         </div>
       </div>
 
       <SignUpForm
         formTitle={formTitle}
         isOpen={isSignUpOpen}
-        onOpenChange={setIsSignUpOpen}
+        onOpenChange={onOpenChange}
       />
     </>
   )

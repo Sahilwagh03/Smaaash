@@ -83,11 +83,11 @@ const SmaaashHighlights = () => {
               Smaaash Highlights
             </Heading>
           </div>
-          <Description size='xs' className='max-w-4xl hidden md:flex highlight-description'>
+          <p className='font-sub text-lg font-semibold max-w-4xl hidden md:flex highlight-description'>
             From cutting-edge virtual reality marvels to classic arcade favorites,
             experience the ultimate gaming extravaganza, catering to every taste
             and age, ensuring an unforgettable vibe for everyone who steps in.
-          </Description>
+          </p>
         </div>
 
         {/* Desktop View - Horizontal Scroll */}

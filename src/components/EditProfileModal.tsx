@@ -19,6 +19,14 @@ import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/u
 const EditProfileModal = () => {
     const [date, setDate] = React.useState<Date>();
     const [gender, setGender] = React.useState("male");
+    const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
+
+    const handleDateSelect = (selectedDate: Date | undefined) => {
+        setDate(selectedDate)
+        setTimeout(()=>{
+            setIsPopoverOpen(false) // Close the popover after selecting a date
+        },200)
+    }
 
     return (
         <Dialog>
@@ -57,7 +65,7 @@ const EditProfileModal = () => {
                     </div>
                     <div>
                         <Label htmlFor="dob">Date of Birth</Label>
-                        <Popover>
+                        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
                             <PopoverTrigger asChild>
                                 <Button
                                     variant={"outline"}
@@ -66,7 +74,7 @@ const EditProfileModal = () => {
                                         !date && "text-muted-foreground"
                                     )}
                                 >
-                                    <CalendarIcon className="mr-2" />
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
                                     {date ? format(date, "PPP") : <span>Pick a date</span>}
                                 </Button>
                             </PopoverTrigger>
@@ -74,7 +82,7 @@ const EditProfileModal = () => {
                                 <Calendar
                                     mode="single"
                                     selected={date}
-                                    onSelect={setDate}
+                                    onSelect={handleDateSelect}
                                     initialFocus
                                 />
                             </PopoverContent>

@@ -8,13 +8,17 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { navigationLinks, thrillZoneActivities, partiesAndEvents } from '../../../constant/navigationLink';
 
-export default function MobileMenu() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+interface MobileNavProps {
+  isMobileMenuOpen:boolean
+  setIsMobileMenuOpen:(open:boolean)=>void
+}
+export default function MobileMenu({isMobileMenuOpen,setIsMobileMenuOpen}:MobileNavProps) {
+  // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isThrillZoneOpen, setIsThrillZoneOpen] = useState(false);
   const [isPartiesAndEventsOpen, setIsPartiesAndEventsOpen] = useState(false);
   const { isUserVerified, handleLoginClick, handleSignUpClick, handleLogout } = useAuth();
 
-  const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const toggleThrillZone = () => setIsThrillZoneOpen((prev) => !prev);
   const togglePartiesAndEvents = () => setIsPartiesAndEventsOpen((prev) => !prev);
 
@@ -107,9 +111,11 @@ export default function MobileMenu() {
             {isUserVerified ? (
               <div className="flex justify-start gap-4 flex-col space-x-4">
                 <div className='flex justify-center items-center'>
-                  <Avatar className="cursor-pointer">
-                    <AvatarImage src={"https://github.com/shadcn.png"} alt="User" />
-                    <AvatarFallback>{'CN'}</AvatarFallback>
+                  <Avatar className="cursor-pointer" onClick={()=>setIsMobileMenuOpen(false)}>
+                    <Link href='/profile'>
+                      <AvatarImage src="https://github.com/shadcn.png" alt="User" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Link>
                   </Avatar>
                 </div>
                 <Button

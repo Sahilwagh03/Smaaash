@@ -79,7 +79,7 @@ const ProfilePage = () => {
                                     </div>
                                 </div>
 
-                                <div>
+                                <div className='ml-4'>
                                     <h3 className="uppercase text-gray-700 font-semibold text-sm tracking-wide mb-4">
                                         Basic Information
                                     </h3>
