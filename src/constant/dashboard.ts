@@ -92,30 +92,49 @@ export const stats = [
         title: 'Total Revenue',
         value: '₹45,231.89',
         change: '+20.1% from last month',
-        icon: DollarSign,
-        color: 'text-green-500', 
+        icon: DollarSign
     },
     {
         title: 'Total Bookings',
         value: '8,673',
         change: '+12.5% from last month',
-        icon: CalendarCheck,
-        color: 'text-purple-500',
+        icon: CalendarCheck
     },
     {
         title: 'Vouchers Used',
         value: '1,450',
         change: '+15% increase in usage',
-        icon: TicketCheck,
-        color: 'text-blue-500', 
+        icon: TicketCheck
     },
     {
         title: 'Vouchers Pending',
         value: '320',
         change: 'Pending approvals',
-        icon: TicketMinus,
-        color: 'text-yellow-500', 
+        icon: TicketMinus
     },
-
 ]
+
+export const bookings = [
+    {
+      name: "Olivia Martin",
+      email: "olivia.martin@email.com",
+      game: "Go-Karting",
+      price: "1,999.00",
+      avatar: "/avatars/01.png",
+    },
+    {
+      name: "Jackson Lee",
+      email: "jackson.lee@email.com",
+      game: "Bowling",
+      price: "39.00",
+      avatar: "/avatars/02.png",
+    },
+    {
+      name: "Isabella Nguyen",
+      email: "isabella.nguyen@email.com",
+      game: "VR Experience",
+      price: "299.00",
+      avatar: "/avatars/03.png",
+    },
+  ]
 
