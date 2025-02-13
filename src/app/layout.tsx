@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "@/components/Header/Header";
-import { SmoothScrolling } from "@/components/SmoothScroll";
-import Footer from "@/components/footer";
-import { AuthProvider } from "@/context/AuthContext";
+import { Toaster } from "@/components/ui/sonner";
 import MainLayout from "@/components/MainLayout";
 
 export const metadata: Metadata = {
@@ -23,6 +20,7 @@ export default function RootLayout({
       </head>
       <body>
         <MainLayout>{children}</MainLayout>
+        <Toaster position="top-right" />
       </body>
     </html>
   );
