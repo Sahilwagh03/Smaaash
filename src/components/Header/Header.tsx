@@ -18,7 +18,7 @@ export default function Header() {
   }
   return (
     <>
-      <div id='header' className="sticky top-0 z-50 flex items-center bg-[#ffffffb3] justify-between p-2 shadow-md bg-white">
+      <div id='header' className="h-[56px] sticky top-0 z-50 flex items-center bg-[#ffffffb3] justify-between p-2 shadow-md bg-white">
         <Link href="/" className="flex items-center" aria-label="home">
           <Image
             loading="lazy"

@@ -19,7 +19,7 @@ interface RecentBookingProps {
 export function RecentBooking({ bookings }: RecentBookingProps) {
     return (
         <div>
-            <div className="space-y-8">
+            <div className="space-y-8 h-auto">
                 {bookings.map((booking, index) => (
                     <div key={index} className="flex items-center">
                         <Avatar className="h-9 w-9">

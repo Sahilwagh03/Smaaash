@@ -4,7 +4,7 @@ import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "
 const chartConfig = {
     total: {
         label: "Total",
-        color: "hsl(var(--chart-1))",
+        color: "hsl(var(--chart-2))",
     },
 } satisfies ChartConfig
 

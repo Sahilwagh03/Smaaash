@@ -6,6 +6,7 @@ import { LineChart, PieChart, Pie, Cell, Line, XAxis, YAxis, CartesianGrid, Tool
 import { BookingTable } from "@/components/Dashboard/BookingTable";
 import { BookingTrendsLineChart } from "@/components/Dashboard/BookingTrendsChart";
 import { BookingPieChart } from "@/components/Dashboard/BookingPieChart";
+import { BookingTypeTrendChart } from "@/components/Dashboard/BookingTypeTrendChart";
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658"];
 
@@ -27,8 +28,8 @@ const Bookings = () => {
 
   return (
     <div className="space-y-4">
+      <h2 className="text-2xl font-bold tracking-tight">Bookings Analaytics</h2>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-2xl font-bold tracking-tight">Bookings Analaytics</h2>
         <Select value={filter} onValueChange={setFilter}>
           <SelectTrigger className="w-full sm:w-40">
             <SelectValue placeholder="Select Filter" />
@@ -58,6 +59,9 @@ const Bookings = () => {
         <div className="w-full max-w-sm lg:max-w-full">
           <BookingTable />
         </div>
+      </div>
+      <div className="w-full h-[300px]">
+          <BookingTypeTrendChart/>
       </div>
     </div>
   );
