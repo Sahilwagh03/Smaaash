@@ -36,7 +36,7 @@ export function RecentBooking({ bookings }: RecentBookingProps) {
                             <p className="text-sm text-muted-foreground">{booking.email}</p>
                             <p className="text-xs text-gray-500">Booked: {booking.game}</p>
                         </div>
-                        <div className="ml-auto font-medium">+${booking.price}</div>
+                        <div className="ml-auto font-medium">+₹{booking.price}</div>
                     </div>
                 ))}
             </div>

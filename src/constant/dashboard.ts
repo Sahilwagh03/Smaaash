@@ -8,11 +8,11 @@ import {
     Gift,
     Star, 
     LucideLoaderPinwheel,
-    DollarSign, 
     Ticket, 
     CalendarCheck,
     TicketMinus,
-    TicketCheck
+    TicketCheck,
+    IndianRupee
 } from 'lucide-react';
 import { PiCoinVerticalBold } from "react-icons/pi";
 
@@ -90,9 +90,9 @@ export const sideBarConstant = {
 export const stats = [
     {
         title: 'Total Revenue',
-        value: '₹45,231.89',
+        value: '₹4,52,318.90',
         change: '+20.1% from last month',
-        icon: DollarSign
+        icon: IndianRupee
     },
     {
         title: 'Total Bookings',
@@ -112,7 +112,8 @@ export const stats = [
         change: 'Pending approvals',
         icon: TicketMinus
     },
-]
+];
+
 
 export const bookings = [
     {
