@@ -12,7 +12,10 @@ import {
     CalendarCheck,
     TicketMinus,
     TicketCheck,
-    IndianRupee
+    IndianRupee,
+    Coins,
+    Trophy,
+    Hourglass
 } from 'lucide-react';
 import { PiCoinVerticalBold } from "react-icons/pi";
 
@@ -38,11 +41,11 @@ export const sideBarConstant = {
             url: "/dashboard/bookings/",
             icon: Calendar,
         },
-        {
-            title: "Revenue",
-            url: "/dashboard/revenue/",
-            icon: CircleDollarSign,
-        },
+        // {
+        //     title: "Revenue",
+        //     url: "/dashboard/revenue/",
+        //     icon: CircleDollarSign,
+        // },
         {
             title: "Vouchers",
             url: "/dashboard/vouchers/",
@@ -92,7 +95,7 @@ export const stats = [
         title: 'Total Revenue',
         value: '₹4,52,318.90',
         change: '+20.1% from last month',
-        icon: IndianRupee
+        icon: IndianRupee,
     },
     {
         title: 'Total Bookings',
@@ -113,6 +116,34 @@ export const stats = [
         icon: TicketMinus
     },
 ];
+
+export const SmaaashCoinStats = [
+    {
+        title: 'Coins Distributed',
+        value: '₹3,45,678',
+        change: '+12.4% this month',
+        icon: Coins
+    },
+    {
+        title: 'Coins Redeemed',
+        value: '₹2,87,654',
+        change: '+9.7% this month',
+        icon: Gift
+    },
+    {
+        title: 'Avg. Coins per User',
+        value: '₹780',
+        change: '+5.6% this month',
+        icon: Trophy
+    },
+    {
+        title: 'Pending Approvals',
+        value: '₹1,23,456',
+        change: 'Under review',
+        icon: Hourglass
+    },
+];
+
 
 
 export const bookings = [
