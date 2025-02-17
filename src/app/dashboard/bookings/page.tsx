@@ -2,18 +2,10 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { LineChart, PieChart, Pie, Cell, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { BookingTable } from "@/components/Dashboard/BookingTable";
 import { BookingTrendsLineChart } from "@/components/Dashboard/BookingTrendsChart";
 import { BookingPieChart } from "@/components/Dashboard/BookingPieChart";
-import { BookingTypeTrendChart } from "@/components/Dashboard/BookingTypeTrendChart";
-
-const COLORS = ["#8884d8", "#82ca9d", "#ffc658"];
-
-const pieData = [
-  { name: "Completed", value: 1980 },
-  { name: "Pending", value: 365 },
-];
+import { BookingTypeBarChart } from "@/components/Dashboard/BookingTypeTrendChart";
 
 const lineData = [
   { name: "Jan", bookings: 300 },
@@ -61,7 +53,7 @@ const Bookings = () => {
         </div>
       </div>
       <div className="w-full h-[300px]">
-          <BookingTypeTrendChart/>
+          <BookingTypeBarChart/>
       </div>
     </div>
   );

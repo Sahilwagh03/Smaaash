@@ -1,75 +1,46 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Input } from "@/components/ui/input";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Trash, GripVertical } from "lucide-react";
-import { TwitterPicker } from "react-color";
-import { DndContext, closestCenter } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { toast } from "sonner";
-
-interface SortableItemProps {
-  id: string;
-  children: React.ReactNode;
-}
-
-const SortableItem: React.FC<SortableItemProps> = ({ id, children }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {children}
-    </div>
-  );
-};
+import SpinWheelPreview from "@/components/Dashboard/SpinWheel/SpinWheelPreview";
+import ManageItems from "@/components/Dashboard/SpinWheel/ManageItems";
+import ItemDialog, { SpinWheelItem } from "@/components/Dashboard/SpinWheel/ItemDialog";
 
 const SpinWheelConfig: React.FC = () => {
-  const [items, setItems] = useState<string[]>([]);
-  const [newItem, setNewItem] = useState("");
-  const [wheelColor, setWheelColor] = useState("#ff0000");
-  // Store spinLimit as a string so the input can be edited freely.
-  const [spinLimit, setSpinLimit] = useState<string>("5");
+  const [items, setItems] = useState<SpinWheelItem[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<SpinWheelItem | null>(null);
+  const [winningResult, setWinningResult] = useState<SpinWheelItem | null>(null);
+  const spinWheelRef = useRef<any>(null);
 
   useEffect(() => {
     const savedConfig = JSON.parse(localStorage.getItem("spinWheelConfig") || "{}");
     if (savedConfig) {
       setItems(savedConfig.items || []);
-      setWheelColor(savedConfig.wheelColor || "#ff0000");
-      // Convert saved spinLimit to a string.
-      setSpinLimit(savedConfig.spinLimit ? String(savedConfig.spinLimit) : "5");
     }
   }, []);
 
-  const handleAddItem = () => {
-    if (newItem.trim()) {
-      if (items.includes(newItem.trim())) {
-        toast.error("Item already exists", {
-          style: { background: "#ff4d4d", color: "#fff" },
-        });
-      } else {
-        setItems([...items, newItem.trim()]);
-        setNewItem("");
-        toast.success("Item added successfully", {
-          style: { background: "#4caf50", color: "#fff" },
-        });
+  const handleDialogSubmit = (newItem: SpinWheelItem) => {
+    if (editingItem) {
+      setItems((prev) => prev.map((item) => (item.id === newItem.id ? newItem : item)));
+      toast.success("Item updated successfully", { style: { background: "#4caf50", color: "#fff" } });
+    } else {
+      if (items.some((item) => item.label === newItem.label)) {
+        toast.error("Item already exists", { style: { background: "#ff4d4d", color: "#fff" } });
+        return;
       }
+      setItems((prev) => [...prev, newItem]);
+      toast.success("Item added successfully", { style: { background: "#4caf50", color: "#fff" } });
     }
+    setEditingItem(null);
   };
 
   const handleRemoveItem = (index: number) => {
     const item = items[index];
     setItems(items.filter((_, i) => i !== index));
     toast("Item removed", {
-      description: `"${item}" was removed from the list.`,
+      description: `"${item.label}" was removed from the list.`,
       action: {
         label: "Undo",
         onClick: () => setItems((prev) => [...prev.slice(0, index), item, ...prev.slice(index)]),
@@ -78,13 +49,12 @@ const SpinWheelConfig: React.FC = () => {
   };
 
   const handleSaveConfig = () => {
-    const config = {
-      items,
-      wheelColor,
-      // Convert the spinLimit string to a number before saving.
-      spinLimit: Number(spinLimit),
-    };
-    localStorage.setItem("spinWheelConfig", JSON.stringify(config));
+    const totalProbability = items.reduce((acc, item) => acc + item.probability, 0);
+    if (totalProbability !== 100) {
+      toast.error("Total probability of all items must equal 100%");
+      return;
+    }
+    localStorage.setItem("spinWheelConfig", JSON.stringify({ items }));
     toast.success("Configuration Saved");
   };
 
@@ -92,88 +62,75 @@ const SpinWheelConfig: React.FC = () => {
     (event: any) => {
       const { active, over } = event;
       if (!over || active.id === over.id) return;
-
-      const oldIndex = items.indexOf(active.id);
-      const newIndex = items.indexOf(over.id);
-
-      setItems((prev) => arrayMove(prev, oldIndex, newIndex));
+      const oldIndex = items.findIndex((item) => item.id === active.id);
+      const newIndex = items.findIndex((item) => item.id === over.id);
+      // Rearrange items using arrayMove (or your custom logic)
+      setItems((prev) => {
+        const updated = [...prev];
+        const [removed] = updated.splice(oldIndex, 1);
+        updated.splice(newIndex, 0, removed);
+        return updated;
+      });
     },
     [items]
   );
 
-  // Handler to allow free editing and prevent unwanted leading zeros.
-  const handleSpinLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-    if (value.length > 1 && value.startsWith("0")) {
-      value = value.replace(/^0+/, "");
+  const handleOnSpinEnd = (winningSegment: any) => {
+    const winningItem = items.find((item) => item.label === winningSegment.label);
+    if (winningItem) {
+      setWinningResult(winningItem);
+      toast.success(`Congratulations! You won: ${winningItem.label}`, {
+        style: { background: "#4caf50", color: "#fff" },
+      });
+    } else {
+      toast.success(`Congratulations! You won: ${winningSegment.label}`, {
+        style: { background: "#4caf50", color: "#fff" },
+      });
     }
-    setSpinLimit(value);
+  };
+
+  const handleEditItem = (item: SpinWheelItem) => {
+    setEditingItem(item);
+    setDialogOpen(true);
   };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Spin Wheel Configuration</h1>
-
-      <div className="grid grid-cols-2 gap-6">
-        {/* Item Management */}
-        <Card className="w-full">
-          <CardHeader className="font-semibold">Manage Items</CardHeader>
-          <CardContent>
-            <div className="flex gap-2 mb-4">
-              <Input
-                value={newItem}
-                onChange={(e) => setNewItem(e.target.value)}
-                placeholder="Enter item label"
-                className="flex-grow"
-              />
-              <Button onClick={handleAddItem}>Add</Button>
+      <div className="flex gap-6">
+        <div className="w-1/2">
+          <SpinWheelPreview items={items} spinWheelRef={spinWheelRef} onSpinEnd={handleOnSpinEnd} />
+          {winningResult && (
+            <div className="mt-4 text-center">
+              <p className="text-lg font-semibold">Congratulations! You won: {winningResult.label}</p>
             </div>
-            <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-              <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                <div className="space-y-2">
-                  {items.map((item, index) => (
-                    <SortableItem key={item} id={item}>
-                      <div className="flex items-center justify-between bg-gray-100 p-2 rounded">
-                        <div className="flex items-center gap-2">
-                          <GripVertical className="cursor-grab" />
-                          <h4 className="text-lg">{item}</h4>
-                        </div>
-                        <Button variant="destructive" size="icon" onClick={() => handleRemoveItem(index)}>
-                          <Trash size={16} />
-                        </Button>
-                      </div>
-                    </SortableItem>
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
-          </CardContent>
-        </Card>
-
-        {/* Wheel Customization */}
-        <Card className="w-full">
-          <CardHeader className="font-semibold">Wheel Customization</CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div>
-                <p className="mb-2 font-medium">Wheel Color</p>
-                <TwitterPicker color={wheelColor} onChange={(color) => setWheelColor(color.hex)} />
-              </div>
-              <div>
-                <label className="block mb-2 font-medium">Spin Limit</label>
-                <Input type="number" value={spinLimit} onChange={handleSpinLimitChange} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          )}
+        </div>
+        <div className="w-1/2">
+          <ManageItems
+            items={items}
+            onDragEnd={onDragEnd}
+            onEdit={handleEditItem}
+            onRemove={handleRemoveItem}
+            onAdd={() => {
+              setEditingItem(null);
+              setDialogOpen(true);
+            }}
+          />
+        </div>
       </div>
-
-      {/* Save Configuration Button */}
       <div className="flex justify-end mt-6 sticky bottom-5">
         <Button onClick={handleSaveConfig} size="lg">
           Save Configuration
         </Button>
       </div>
+      <ItemDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title={editingItem ? "Edit Item" : "Add Item"}
+        initialData={editingItem || undefined}
+        onSubmit={handleDialogSubmit}
+      />
     </div>
   );
 };

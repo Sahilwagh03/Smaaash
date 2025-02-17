@@ -1,98 +1,105 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Trash, GripVertical, Upload, XCircle } from "lucide-react";
-import { TwitterPicker } from "react-color";
+import { Upload, X, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
-import { DndContext, closestCenter } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-
-interface SortableItemProps {
-  id: string;
-  children: React.ReactNode;
-}
-
-const SortableItem: React.FC<SortableItemProps> = ({ id, children }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-  const style = { transform: CSS.Transform.toString(transform), transition };
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {children}
-    </div>
-  );
-};
+import ScratchCard from "@/components/scratchCard";
+import ManageItems from "@/components/Dashboard/SpinWheel/ManageItems";
+import ItemDialog, { SpinWheelItem } from "@/components/Dashboard/SpinWheel/ItemDialog";
 
 const ScratchCardConfigPage: React.FC = () => {
-  const [prizes, setPrizes] = useState<string[]>([]);
-  const [newPrize, setNewPrize] = useState("");
-  const [themeColor, setThemeColor] = useState("#3498db");
-  // Store scratchPercentage as string so the user can edit it freely.
-  const [scratchPercentage, setScratchPercentage] = useState<string>("70");
+  // States for items, overlay, editing, winning reward, dialog and scratch card re-mount key
+  const [items, setItems] = useState<SpinWheelItem[]>([]);
   const [overlayImage, setOverlayImage] = useState<string | null>(null);
+  const [editingItem, setEditingItem] = useState<SpinWheelItem | null>(null);
+  const [winningResult, setWinningResult] = useState<SpinWheelItem | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [scratchKey, setScratchKey] = useState(0);
 
+  // Load saved config from localStorage on mount
   useEffect(() => {
     const savedConfig = JSON.parse(localStorage.getItem("scratchCardConfig") || "{}");
     if (savedConfig) {
-      setPrizes(savedConfig.prizes || []);
-      setThemeColor(savedConfig.themeColor || "#3498db");
-      // Convert saved scratchPercentage to a string
-      setScratchPercentage(savedConfig.scratchPercentage ? String(savedConfig.scratchPercentage) : "70");
+      setItems(savedConfig.items || []);
       setOverlayImage(savedConfig.overlayImage || null);
     }
   }, []);
 
-  const handleAddPrize = () => {
-    if (newPrize.trim()) {
-      if (prizes.includes(newPrize.trim())) {
-        toast.error("Prize already exists", { style: { background: "#ff4d4d", color: "#fff" } });
-      } else {
-        setPrizes([...prizes, newPrize.trim()]);
-        setNewPrize("");
-        toast.success("Prize added successfully", { style: { background: "#4caf50", color: "#fff" } });
-      }
+  // Pre-select reward as soon as items, overlay or scratchKey changes
+  useEffect(() => {
+    if (items.length > 0) {
+      const reward = selectReward();
+      setWinningResult(reward);
     }
+  }, [items, overlayImage, scratchKey]);
+
+  // Handle add/edit item submission
+  const handleDialogSubmit = (newItem: SpinWheelItem) => {
+    if (editingItem) {
+      setItems((prev) => prev.map((item) => (item.id === newItem.id ? newItem : item)));
+      toast.success("Item updated successfully", { style: { background: "#4caf50", color: "#fff" } });
+    } else {
+      if (items.some((item) => item.label === newItem.label)) {
+        toast.error("Item already exists", { style: { background: "#ff4d4d", color: "#fff" } });
+        return;
+      }
+      setItems((prev) => [...prev, newItem]);
+      toast.success("Item added successfully", { style: { background: "#4caf50", color: "#fff" } });
+    }
+    setEditingItem(null);
   };
 
-  const handleRemovePrize = (index: number) => {
-    const prize = prizes[index];
-    setPrizes(prizes.filter((_, i) => i !== index));
-    toast("Prize removed", {
-      description: `"${prize}" was removed from the list.`,
+  // Remove an item with an undo option
+  const handleRemoveItem = (index: number) => {
+    const item = items[index];
+    setItems(items.filter((_, i) => i !== index));
+    toast("Item removed", {
+      description: `"${item.label}" was removed from the list.`,
       action: {
         label: "Undo",
-        onClick: () => setPrizes((prev) => [...prev.slice(0, index), prize, ...prev.slice(index)]),
+        onClick: () => setItems((prev) => [...prev.slice(0, index), item, ...prev.slice(index)]),
       },
     });
   };
 
+  // Save configuration to localStorage after validating total probability
   const handleSaveConfig = () => {
-    const config = {
-      prizes,
-      themeColor,
-      // Convert the scratchPercentage string to a number before saving
-      scratchPercentage: Number(scratchPercentage),
-      overlayImage,
-    };
+    const config = { items, overlayImage };
+    const totalProbability = items.reduce((acc, item) => acc + item.probability, 0);
+    if (totalProbability !== 100) {
+      toast.error("Total probability of all items must equal 100%");
+      return;
+    }
     localStorage.setItem("scratchCardConfig", JSON.stringify(config));
-    toast.success("Configuration Saved", { style: { background: "#007bff", color: "#fff" } });
+    toast.success("Configuration Saved");
   };
 
+  // onDragEnd handler to rearrange items via drag-and-drop
   const onDragEnd = useCallback(
     (event: any) => {
       const { active, over } = event;
       if (!over || active.id === over.id) return;
-      const oldIndex = prizes.indexOf(active.id);
-      const newIndex = prizes.indexOf(over.id);
-      setPrizes((prev) => arrayMove(prev, oldIndex, newIndex));
+      const oldIndex = items.findIndex((item) => item.id === active.id);
+      const newIndex = items.findIndex((item) => item.id === over.id);
+      setItems((prev) => {
+        const updated = [...prev];
+        const [removed] = updated.splice(oldIndex, 1);
+        updated.splice(newIndex, 0, removed);
+        return updated;
+      });
     },
-    [prizes]
+    [items]
   );
 
+  // Open the edit dialog for a given item
+  const handleEditItem = (item: SpinWheelItem) => {
+    setEditingItem(item);
+    setDialogOpen(true);
+  };
+
+  // Handle overlay image upload
   const handleOverlayUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -105,108 +112,119 @@ const ScratchCardConfigPage: React.FC = () => {
     }
   };
 
+  // Remove the overlay image
   const handleRemoveOverlay = () => {
     setOverlayImage(null);
     toast.info("Overlay Image Removed");
   };
 
-  // Allow user to type freely, removing leading zeros if necessary.
-  const handleScratchPercentageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value;
-    if (value.length > 1 && value.startsWith("0")) {
-      value = value.replace(/^0+/, "");
+  // Weighted random selection based on the item's probability.
+  // Each item must have a 'probability' field and the total should add up to 100.
+  const selectReward = (): SpinWheelItem | null => {
+    const randomNumber = Math.random() * 100; // number between 0 and 100
+    let cumulative = 0;
+    for (const item of items) {
+      cumulative += item.probability;
+      if (randomNumber < cumulative) {
+        return item;
+      }
     }
-    setScratchPercentage(value);
+    return null;
+  };
+
+  // Reset the scratch card preview and select a new reward
+  const handleReset = () => {
+    setScratchKey((prev) => prev + 1);
+    // (The useEffect will re-run and select a new reward)
   };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Scratch Card Configuration</h1>
-
-      {/* Overlay Image Upload Section */}
-      <Card className="w-full mb-6">
-        <CardHeader className="font-semibold">Overlay Image</CardHeader>
-        <CardContent>
-          {overlayImage ? (
-            <div className="relative w-full h-48 border rounded-md overflow-hidden">
-              <img src={overlayImage} alt="Overlay" className="w-full h-full object-cover" />
-              <Button
-                className="absolute top-2 right-2"
-                variant="destructive"
-                size="icon"
-                onClick={handleRemoveOverlay}
-              >
-                <XCircle size={18} />
-              </Button>
-            </div>
-          ) : (
-            <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-md p-6 cursor-pointer hover:bg-gray-50">
-              <Upload size={32} className="text-gray-500 mb-2" />
-              <span className="text-gray-500">Click or drag to upload an overlay image</span>
-              <span className="text-xs text-gray-400">Supported formats: PNG, JPG, JPEG</span>
-              <input type="file" accept="image/*" className="hidden" onChange={handleOverlayUpload} />
-            </label>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Grid with Prize Management and Scratch Card Customization */}
       <div className="grid grid-cols-2 gap-6">
-        {/* Prize Management */}
-        <Card className="w-full">
-          <CardHeader className="font-semibold">Manage Prizes</CardHeader>
-          <CardContent>
-            <div className="flex gap-2 mb-4">
-              <Input
-                value={newPrize}
-                onChange={(e) => setNewPrize(e.target.value)}
-                placeholder="Enter prize name"
-                className="flex-grow"
-              />
-              <Button onClick={handleAddPrize}>Add</Button>
-            </div>
-            <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-              <SortableContext items={prizes} strategy={verticalListSortingStrategy}>
-                <div className="space-y-2">
-                  {prizes.map((prize, index) => (
-                    <SortableItem key={prize} id={prize}>
-                      <div className="flex items-center justify-between bg-gray-100 p-2 rounded">
-                        <div className="flex items-center gap-2">
-                          <GripVertical className="cursor-grab" />
-                          <h4 className="text-lg">{prize}</h4>
-                        </div>
-                        <Button variant="destructive" size="icon" onClick={() => handleRemovePrize(index)}>
-                          <Trash size={16} />
-                        </Button>
-                      </div>
-                    </SortableItem>
-                  ))}
+        {/* Left Column: Scratch Card Preview */}
+        <Card className="w-full h-fit">
+          <CardHeader className="font-semibold">Scratch Card Preview</CardHeader>
+          <CardContent className="flex flex-col items-center">
+            {overlayImage ? (
+              <>
+                <ScratchCard
+                  key={scratchKey} // forces re-mount on reset
+                  coverImage={overlayImage}
+                  width={300}
+                  height={300}
+                  revealPercent={20}
+                  brushSize={50}
+                  onComplete={() => {
+                    if (winningResult) {
+                      toast.success(`You won: ${winningResult.label}`);
+                    }
+                  }}
+                  className="w-full h-64"
+                >
+                  <div className="flex flex-col items-center justify-center h-full">
+                    {winningResult ? (
+                      <div className="text-4xl text-center select-none text-brand_primary font-bold">{winningResult.label}</div>
+                    ) : (
+                      <span className="text-lg">Scratch to reveal your reward!</span>
+                    )}
+                  </div>
+                </ScratchCard>
+                <div className="flex justify-center mt-4">
+                  <Button variant="outline" onClick={handleReset}>
+                    <RotateCcw size={18} className="mr-2" />
+                    Reset
+                  </Button>
                 </div>
-              </SortableContext>
-            </DndContext>
+              </>
+            ) : (
+              <div className="w-full h-64 border rounded-md flex items-center justify-center text-gray-500">
+                No overlay image uploaded
+              </div>
+            )}
           </CardContent>
         </Card>
 
-        {/* Scratch Card Customization */}
-        <Card className="w-full">
-          <CardHeader className="font-semibold">Scratch Card Customization</CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div>
-                <p className="mb-2 font-medium">Theme Color</p>
-                <TwitterPicker color={themeColor} onChange={(color) => setThemeColor(color.hex)} />
-              </div>
-              <div>
-                <label className="block mb-2 font-medium">Scratch Percentage</label>
-                <Input
-                  type="number"
-                  value={scratchPercentage}
-                  onChange={handleScratchPercentageChange}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Right Column: Manage Items & Overlay Image */}
+        <div className="space-y-6">
+          {/* Manage Items */}
+          <ManageItems
+            items={items}
+            onDragEnd={onDragEnd}
+            onEdit={handleEditItem}
+            onRemove={handleRemoveItem}
+            onAdd={() => {
+              setEditingItem(null);
+              setDialogOpen(true);
+            }}
+          />
+          {/* Overlay Image Upload */}
+          <Card className="w-full">
+            <CardHeader className="font-semibold">Overlay Image</CardHeader>
+            <CardContent>
+              {overlayImage ? (
+                <div className="relative w-full h-48 border rounded-md overflow-hidden">
+                  <img src={overlayImage} alt="Overlay" className="w-full h-full object-contain" />
+                  <Button
+                    className="absolute top-2 right-2"
+                    variant="destructive"
+                    size="icon"
+                    onClick={handleRemoveOverlay}
+                  >
+                    <X size={18} />
+                  </Button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-md p-6 cursor-pointer hover:bg-gray-50">
+                  <Upload size={32} className="text-gray-500 mb-2" />
+                  <span className="text-gray-500">Click or drag to upload an overlay image</span>
+                  <span className="text-xs text-gray-400">Supported formats: PNG, JPG, JPEG</span>
+                  <input type="file" accept="image/*" className="hidden" onChange={handleOverlayUpload} />
+                </label>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Save Configuration Button */}
@@ -215,6 +233,13 @@ const ScratchCardConfigPage: React.FC = () => {
           Save Configuration
         </Button>
       </div>
+      <ItemDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title={editingItem ? "Edit Item" : "Add Item"}
+        initialData={editingItem || undefined}
+        onSubmit={handleDialogSubmit}
+      />
     </div>
   );
 };
